@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\SkillGroup;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -26,6 +27,15 @@ class SkillGroupCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Gruppo di Skill')
             ->setPageTitle('index', 'Lista dei %entity_label_plural%')
             ->setDateFormat('d F Y')
+            ;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('count')
+            ->add('job')
+            ->add('skills')
             ;
     }
 

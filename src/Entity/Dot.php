@@ -13,6 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\DiscriminatorMap({
  *     "attribute" = "AttributeDot",
  *     "skill"     = "SkillDot",
+ *     "background"     = "BackgroundDot",
  * })
  */
 abstract class Dot

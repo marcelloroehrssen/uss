@@ -39,12 +39,6 @@ class Job
     private $cite;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Skill::class)
-     * @Groups("exposed")
-     */
-    private $skill;
-
-    /**
      * @ORM\ManyToOne(targetEntity=JobType::class, inversedBy="jobs")
      * @ORM\JoinColumn(nullable=false)
      * @Groups("exposed")
@@ -57,9 +51,14 @@ class Job
      */
     private $skillGroups;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @Groups("exposed")
+     */
+    private $canHaveWife = true;
+
     public function __construct()
     {
-        $this->skill = new ArrayCollection();
         $this->skillGroups = new ArrayCollection();
     }
 
@@ -100,32 +99,6 @@ class Job
     public function setCite(string $cite): self
     {
         $this->cite = $cite;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Skill[]
-     */
-    public function getSkill(): Collection
-    {
-        return $this->skill;
-    }
-
-    public function addSkill(Skill $skill): self
-    {
-        if (!$this->skill->contains($skill)) {
-            $this->skill[] = $skill;
-        }
-
-        return $this;
-    }
-
-    public function removeSkill(Skill $skill): self
-    {
-        if ($this->skill->contains($skill)) {
-            $this->skill->removeElement($skill);
-        }
 
         return $this;
     }
@@ -178,5 +151,15 @@ class Job
         return $this->name;
     }
 
+    public function getCanHaveWife(): ?bool
+    {
+        return $this->canHaveWife;
+    }
 
+    public function setCanHaveWife(?bool $canHaveWife): self
+    {
+        $this->canHaveWife = $canHaveWife;
+
+        return $this;
+    }
 }

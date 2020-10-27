@@ -104,6 +104,6 @@ class JobType
 
     public function __toString()
     {
-        return "Mentale ad $this->requisite";
+        return "Sociali ad $this->requisite";
     }
 }

@@ -1,3 +1,5 @@
 action.save_and_continue: "Salva e Continue"
+action.create_and_add_another: "Crea ed aggiungi un altro"
+action.create: "Crea"
 action.save: "Salva"
 field.text_editor.view_content: 'Vedi contenuto'

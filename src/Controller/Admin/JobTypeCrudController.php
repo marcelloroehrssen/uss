@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\JobType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
@@ -23,6 +24,14 @@ class JobTypeCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Tipologia di mestiere')
             ->setPageTitle('index', 'Lista delle %entity_label_plural%')
             ->setDateFormat('d F Y')
+            ;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('label')
+            ->add('requisite')
             ;
     }
 

@@ -1,0 +1,93 @@
+{% extends ea is defined ? ea.templatePath('layout') : '@EasyAdmin/page/login_minimal.html.twig' %}
+
+{% block body_class 'page-login' %}
+{% block page_title %}Login{% endblock %}
+
+{% block wrapper_wrapper %}
+
+    {% for flashError in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    <div class="login-wrapper">
+        <header class="main-header mb-4">
+            <div id="header-logo">
+                <div class="logo logo-long">Login - USS</div>
+            </div>
+        </header>
+
+        {% if app.user %}
+            <div class="alert alert-danger">
+                Sei loggato come {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+            </div>
+        {% endif %}
+
+        <section class="content">
+            <form method="post">
+
+                <div class="form-group field-text">
+                    <label for="username" class="sr-only form-control-label required">Username</label>
+                    <div class="form-widget form-widget-with-icon">
+                        <i class="fa fa-fw fa-user"></i>
+                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control"
+                               required autofocus>
+                    </div>
+                </div>
+
+                <div class="form-group field-password">
+                    <label for="password" class="sr-only form-control-label required">Password</label>
+                    <div class="form-widget form-widget-with-icon">
+                        <i class="fa fa-fw fa-lock"></i>
+                        <input type="password" name="password" id="inputPassword" class="form-control" required>
+                    </div>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="form-group field-button">
+                    <button class="btn btn-primary btn-lg btn-block" onclick="this.form.submit(); this.disabled=true;"
+                            type="submit">Log in
+                    </button>
+                </div>
+
+            </form>
+        </section>
+
+    </div>
+{% endblock %}
+
+{#{% extends 'base.html.twig' %}#}
+
+{#{% block body %}#}
+{#    <form method="post">#}
+{#        {% if app.user %}#}
+{#            <div class="mb-3">#}
+{#                Sei loggato come {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>#}
+{#            </div>#}
+{#        {% endif %}#}
+
+{#        <h1 class="h3 mb-3 font-weight-normal">Logati</h1>#}
+{#        <label for="inputEmail">Email</label>#}
+{#        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required#}
+{#               autofocus>#}
+{#        <label for="inputPassword">Password</label>#}
+{#        <input type="password" name="password" id="inputPassword" class="form-control" required>#}
+
+{#        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">#}
+
+
+{#        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.#}
+{#        See https://symfony.com/doc/current/security/remember_me.html#}
+
+{#        <div class="checkbox mb-3">#}
+{#            <label>#}
+{#                <input type="checkbox" name="_remember_me"> Remember me#}
+{#            </label>#}
+{#        </div>#}
+
+
+{#        <button class="btn btn-lg btn-primary" type="submit">#}
+{#            Log in#}
+{#        </button>#}
+{#    </form>#}
+{#{% endblock %}#}

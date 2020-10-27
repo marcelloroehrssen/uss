@@ -1,0 +1,35 @@
+{% extends ea is defined ? ea.templatePath('layout') : '@EasyAdmin/page/login_minimal.html.twig' %}
+
+{% block body_class 'page-login' %}
+
+{% block page_title %}Login{% endblock %}
+
+{% block wrapper_wrapper %}
+    <div class="login-wrapper">
+        <header class="main-header mb-4">
+            <div id="header-logo">
+                <div class="logo logo-long">Reset password - USS</div>
+            </div>
+        </header>
+
+        <section class="content">
+            {{ form_start(requestForm) }}
+            <div class="form-group field-text">
+                <label for="username" class="sr-only form-control-label required">Username</label>
+                <div class="form-widget form-widget-with-icon">
+                    <i class="fa fa-fw fa-user"></i>
+                    {{ form_widget(requestForm.email, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+            <div>
+                <small>
+                    Inserisci il tua indirizzo, un'email verrà inviata all'indirizzo scelto
+                </small>
+            </div>
+            <div class="form-group field-button">
+                <button class="btn btn-primary btn-lg btn-block">Invia email di reset</button>
+            </div>
+            {{ form_end(requestForm) }}
+        </section>
+    </div>
+{% endblock %}

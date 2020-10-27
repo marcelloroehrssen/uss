@@ -46,6 +46,7 @@ class Skill
 
     /**
      * @ORM\OneToMany(targetEntity=SkillDot::class, mappedBy="skill")
+     * @ORM\OrderBy({"value" = "ASC"})
      * @Groups("exposed")
      */
     private $dots;

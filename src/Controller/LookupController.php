@@ -109,4 +109,32 @@ class LookupController extends AbstractController
             'dots' => AbstractMinimalNormalizer::TYPE_MINIMAL
         ]);
     }
+
+    /**
+     * @Route("/background", name="lookup_bakcground")
+     * @param Repository\BackgroundRepository $backgroundRepository
+     * @return JsonResponse
+     */
+    public function background(Repository\BackgroundRepository $backgroundRepository)
+    {
+        $data = $backgroundRepository->findAll();
+        return $this->json($data, 200, [], [
+            'groups' => 'exposed',
+            'dots' => AbstractMinimalNormalizer::TYPE_MINIMAL
+        ]);
+    }
+
+    /**
+     * @Route("/introduction_text", name="lookup_introduction_text")
+     * @param Repository\IntroductionTextRepository $introductionTextRepository
+     * @return JsonResponse
+     */
+    public function introductionText(Repository\IntroductionTextRepository $introductionTextRepository)
+    {
+        $data = $introductionTextRepository->findAll();
+        return $this->json($data, 200, [], [
+            'groups' => 'exposed',
+            'dots' => AbstractMinimalNormalizer::TYPE_MINIMAL
+        ]);
+    }
 }

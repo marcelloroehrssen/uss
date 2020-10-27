@@ -128,5 +128,4 @@ class Attribute
     {
         return $this->name;
     }
-
 }

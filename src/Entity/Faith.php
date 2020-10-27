@@ -36,6 +36,12 @@ class Faith
      */
     private $enabled;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups("exposed")
+     */
+    private $limitWife = 1;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -73,6 +79,18 @@ class Faith
     public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function getLimitWife(): ?int
+    {
+        return $this->limitWife;
+    }
+
+    public function setLimitWife(?int $limitWife): self
+    {
+        $this->limitWife = $limitWife;
 
         return $this;
     }

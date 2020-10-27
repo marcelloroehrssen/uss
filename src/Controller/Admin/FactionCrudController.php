@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Faction;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -26,6 +27,16 @@ class FactionCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Fazione')
             ->setPageTitle('index', 'Lista delle %entity_label_plural%')
             ->setDateFormat('d F Y')
+            ;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('name')
+            ->add('type')
+            ->add('visibility')
+            ->add('skills')
             ;
     }
 

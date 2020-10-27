@@ -5,5 +5,41 @@
 {% endblock %}
 
 {% block page_content %}
-ciao
+    <p>
+        ciao {{ app.user.username }},
+    </p>
+    <p>
+        Benvenuto nella dashboard di <strong>Una sporca storia</strong>, da qui potrai gestire tutti gli utenti, le
+        schede dei PG, e tutte le altre meravigliore funzionalità che verranno aggiunte con il tempo.
+    </p>
+    <p>
+        la dashbord di <strong>Una sporca storia</strong> è un progetto a lungo termine quindi nuove e più potenti
+        funzionalità verranno aggiunte con il tempo, qualora dovessi trovare problemi e bug ti prego di segnalarlo a
+        <a href="#">tech@unasporcastoria.it</a>
+    </p>
+    <p>
+        le funzionalità attualmente disponibili sono qui a sinistra:
+    </p>
+    <ul>
+        <li><strong>Dashboard</strong>: per tornare in questa pagina</li>
+        <li>
+            <span><strong>Creazione PG</strong>: per gestire i dati che verranno forniti durante la creazione dei PG</span>
+            <ul>
+                <li><strong>Difetti</strong>: per aggiungere nuovi difetti</li>
+                <li><strong>Attributi</strong>: per cambiare le descrizioni da mostrare per ogni attributo</li>
+                <li><strong>Fedi</strong>: per aggiungere/modifica le fedi selezionabili dai PG</li>
+                <li><strong>Fazioni</strong>: per aggiungere/modifica le fazioni selezionabili dai PG</li>
+                <li><strong>Mestiere</strong>: per aggiungere/modifica i mestieri selezionabili dai PG</li>
+                <li><strong>Gruppi di abilità</strong>: per aggiungere/modifica le skill attribuite ai vari mestieri</li>
+                <li><strong>Abilità</strong>: le skill disponibili a gli utenti</li>
+                <li><strong>Tipologie di mestiere</strong>: i tipi e le categorie di mestiere disponibili</li>
+                <li><strong>Pallini abilità/attributi</strong>: i singoli pallini di ogni skil e/o attributo</li>
+            </ul>
+        </li>
+        <li><strong>Utenti</strong>: per gestire gli utenti registrati</li>
+    </ul>
+    <p>
+        Grazie e buon gioco,<br />
+        Tech Team
+    </p>
 {% endblock %}

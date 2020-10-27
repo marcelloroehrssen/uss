@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Skill;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -26,6 +27,14 @@ class SkillCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Abilità')
             ->setPageTitle('index', 'Lista delle %entity_label_plural%')
             ->setDateFormat('d F Y')
+            ;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('name')
+            ->add('dots')
             ;
     }
 

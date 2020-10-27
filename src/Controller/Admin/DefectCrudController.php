@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Defect;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
@@ -24,6 +25,14 @@ class DefectCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Difetto')
             ->setPageTitle('index', 'Lista dei %entity_label_plural%')
             ->setDateFormat('d F Y')
+            ;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('name')
+            ->add('cost')
             ;
     }
 

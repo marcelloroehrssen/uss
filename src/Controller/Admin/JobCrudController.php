@@ -4,8 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Entity\Job;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
@@ -29,6 +31,14 @@ class JobCrudController extends AbstractCrudController
             ;
     }
 
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add('name')
+            ->add('requisite')
+            ;
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -36,7 +46,8 @@ class JobCrudController extends AbstractCrudController
             TextField::new('name', 'Nome'),
             TextareaField::new('description', 'Descrizione'),
             TextField::new('cite', 'Citazione'),
-            AssociationField::new('requisite', 'Requisito')
+            AssociationField::new('requisite', 'Requisito'),
+            BooleanField::new('canHaveWife', 'Può avere marito/moglie')
         ];
     }
 }
