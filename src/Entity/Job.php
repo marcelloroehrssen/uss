@@ -57,9 +57,15 @@ class Job
      */
     private $canHaveWife = true;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Character::class, mappedBy="job")
+     */
+    private $characters;
+
     public function __construct()
     {
         $this->skillGroups = new ArrayCollection();
+        $this->characters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -159,6 +165,37 @@ class Job
     public function setCanHaveWife(?bool $canHaveWife): self
     {
         $this->canHaveWife = $canHaveWife;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Character[]
+     */
+    public function getCharacters(): Collection
+    {
+        return $this->characters;
+    }
+
+    public function addCharacter(Character $character): self
+    {
+        if (!$this->characters->contains($character)) {
+            $this->characters[] = $character;
+            $character->setJob($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharacter(Character $character): self
+    {
+        if ($this->characters->contains($character)) {
+            $this->characters->removeElement($character);
+            // set the owning side to null (unless already changed)
+            if ($character->getJob() === $this) {
+                $character->setJob(null);
+            }
+        }
 
         return $this;
     }

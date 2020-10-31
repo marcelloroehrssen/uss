@@ -50,9 +50,15 @@ class Faction
      */
     private $skills;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Character::class, mappedBy="faction")
+     */
+    private $characters;
+
     public function __construct()
     {
         $this->skills = new ArrayCollection();
+        $this->characters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -129,6 +135,37 @@ class Faction
     {
         if ($this->skills->contains($skill)) {
             $this->skills->removeElement($skill);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Character[]
+     */
+    public function getCharacters(): Collection
+    {
+        return $this->characters;
+    }
+
+    public function addCharacter(Character $character): self
+    {
+        if (!$this->characters->contains($character)) {
+            $this->characters[] = $character;
+            $character->setFaction($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharacter(Character $character): self
+    {
+        if ($this->characters->contains($character)) {
+            $this->characters->removeElement($character);
+            // set the owning side to null (unless already changed)
+            if ($character->getFaction() === $this) {
+                $character->setFaction(null);
+            }
         }
 
         return $this;

@@ -81,9 +81,15 @@ class Background
      */
     private $costType;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CharacterBackground::class, mappedBy="backgrounds")
+     */
+    private $characterBackgrounds;
+
     public function __construct()
     {
         $this->dot = new ArrayCollection();
+        $this->characterBackgrounds = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -231,6 +237,37 @@ class Background
     public function setCostType(int $costType): self
     {
         $this->costType = $costType;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CharacterBackground[]
+     */
+    public function getCharacterBackgrounds(): Collection
+    {
+        return $this->characterBackgrounds;
+    }
+
+    public function addCharacterBackground(CharacterBackground $characterBackground): self
+    {
+        if (!$this->characterBackgrounds->contains($characterBackground)) {
+            $this->characterBackgrounds[] = $characterBackground;
+            $characterBackground->setBackgrounds($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharacterBackground(CharacterBackground $characterBackground): self
+    {
+        if ($this->characterBackgrounds->contains($characterBackground)) {
+            $this->characterBackgrounds->removeElement($characterBackground);
+            // set the owning side to null (unless already changed)
+            if ($characterBackground->getBackgrounds() === $this) {
+                $characterBackground->setBackgrounds(null);
+            }
+        }
 
         return $this;
     }
