@@ -7,9 +7,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -45,12 +45,19 @@ class BackgroundCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Nome'),
             IntegerField::new('count', 'Acquistabile')->setHelp('Numero massimo di volte per cui è acquistabile questo Background, 0 (zero) vuole dire illimitato'),
-            TextEditorField::new('description', 'Descrizione'),
+            TextEditorField::new('description', 'Descrizione')->hideOnIndex(),
             TextField::new('bonus', 'Bonus'),
             TextField::new('malus', 'Malus'),
-            TextEditorField::new('extra', 'Extra'),
+            TextField::new('keep', 'Mantenimento'),
+            TextEditorField::new('extra', 'Extra')->hideOnIndex(),
             TextEditorField::new('note', 'Note'),
-            AssociationField::new('dots', 'Pallini')
+            AssociationField::new('dots', 'Pallini'),
+            ChoiceField::new('costType', 'Tipo di costo')->setChoices([
+                'Normale' => 0,
+                'Esponenziale' => 1,
+                'x2' => 2,
+                'x3' => 3
+            ]),
         ];
     }
 }

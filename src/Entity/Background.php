@@ -75,6 +75,12 @@ class Background
      */
     private $count = 0;
 
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups("exposed")
+     */
+    private $costType;
+
     public function __construct()
     {
         $this->dot = new ArrayCollection();
@@ -215,5 +221,17 @@ class Background
     public function __toString()
     {
         return $this->name;
+    }
+
+    public function getCostType(): ?int
+    {
+        return $this->costType;
+    }
+
+    public function setCostType(int $costType): self
+    {
+        $this->costType = $costType;
+
+        return $this;
     }
 }

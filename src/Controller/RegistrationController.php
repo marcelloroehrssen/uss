@@ -65,6 +65,34 @@ class RegistrationController extends AbstractController
     }
 
     /**
+     * @Route("/register_json", name="app_register_json")
+     */
+    public function registerJson(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    {
+        $content = json_decode($request->getContent());
+
+        $user = new User();
+        $user->setEmail($content->username);
+        $user->setIsVerified(true);
+        $user->setPassword(
+            $passwordEncoder->encodePassword(
+                $user,
+                $content->password
+            )
+        );
+        $user->setRoles(['ROLE_USER']);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->json([
+            'username' => $user->getUsername(),
+            'roles' => $user->getRoles(),
+        ]);
+    }
+
+    /**
      * @Route("/verify/email", name="app_verify_email")
      */
     public function verifyUserEmail(Request $request): Response
