@@ -82,7 +82,7 @@ class Background
     private $costType;
 
     /**
-     * @ORM\OneToMany(targetEntity=CharacterBackground::class, mappedBy="backgrounds")
+     * @ORM\OneToMany(targetEntity=CharacterBackground::class, mappedBy="background")
      */
     private $characterBackgrounds;
 

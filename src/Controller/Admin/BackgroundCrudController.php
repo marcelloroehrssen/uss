@@ -23,8 +23,8 @@ class BackgroundCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInPlural('Backgound')
-            ->setEntityLabelInSingular('Backgound')
+            ->setEntityLabelInPlural('Background')
+            ->setEntityLabelInSingular('Background')
             ->setPageTitle('index', 'Lista dei %entity_label_plural%')
             ->setDateFormat('d F Y')
             ;

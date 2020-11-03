@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=CharacterRepository::class)
  * @ORM\Table(name="`character`")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Character
 {
@@ -29,6 +30,13 @@ class Character
      * @ORM\Column(type="boolean")
      */
     private $enabled = 0;
+
+    /**
+     * 0 - PG
+     * 1 - PNG
+     * @ORM\Column(type="smallint")
+     */
+    private $type = 0;
 
     /**
      * @ORM\Column(type="datetime")
@@ -51,7 +59,7 @@ class Character
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=CharacterAttribute::class, mappedBy="characterSheet", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=CharacterAttribute::class, mappedBy="characterSheet", orphanRemoval=true, fetch="EAGER", cascade={"persist", "remove"})
      */
     private $characterAttributes;
 
@@ -96,12 +104,12 @@ class Character
     private $defects;
 
     /**
-     * @ORM\OneToMany(targetEntity=CharacterSkill::class, mappedBy="characterSheet")
+     * @ORM\OneToMany(targetEntity=CharacterSkill::class, mappedBy="characterSheet", cascade={"persist", "remove"})
      */
     private $characterSkills;
 
     /**
-     * @ORM\OneToMany(targetEntity=CharacterBackground::class, mappedBy="characterSheet")
+     * @ORM\OneToMany(targetEntity=CharacterBackground::class, mappedBy="characterSheet", cascade={"persist", "remove"})
      */
     private $characterBackgrounds;
 
@@ -141,6 +149,19 @@ class Character
         $this->enabled = $enabled;
 
         return $this;
+    }
+
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType(int $type): void
+    {
+        $this->type = $type;
     }
 
     public function getCreationDate(): ?\DateTimeInterface
@@ -406,5 +427,24 @@ class Character
         }
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersit()
+    {
+        if (null === $this->creationDate) {
+            $this->creationDate = new \DateTime();
+        }
+        $this->modificationDate = new \DateTime();
+    }
+
+    /**
+     * @ORM\PreUpdate()
+     */
+    public function preUpdate()
+    {
+        $this->modificationDate = new \DateTime();
     }
 }

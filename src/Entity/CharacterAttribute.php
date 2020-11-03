@@ -23,7 +23,7 @@ class CharacterAttribute
     private $value = 1;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Attribute::class)
+     * @ORM\ManyToOne(targetEntity=Attribute::class, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $attribute;
@@ -73,5 +73,10 @@ class CharacterAttribute
         $this->characterSheet = $characterSheet;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->attribute->getName(). ': '. $this->value;
     }
 }

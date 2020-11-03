@@ -6,10 +6,12 @@ use App\Entity\Attribute;
 use App\Entity\AttributeDot;
 use App\Entity\Background;
 use App\Entity\BackgroundDot;
+use App\Entity\Character;
 use App\Entity\Defect;
 use App\Entity\Faction;
 use App\Entity\Faith;
 use App\Entity\IntroductionText;
+use App\Entity\Item;
 use App\Entity\Job;
 use App\Entity\JobType;
 use App\Entity\Skill;
@@ -43,6 +45,8 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Testi Introduttivi', 'fas fa-spell-check', IntroductionText::class);
+        yield MenuItem::linkToCrud('Utenti', 'fas fa-user-edit', User::class);
+        yield MenuItem::linkToCrud('Personaggi', 'far fa-id-card', Character::class);
         yield MenuItem::subMenu('Creazione PG', 'fas fa-street-view')->setSubItems([
             MenuItem::linkToCrud('Difetti', 'fas fa-blind', Defect::class),
             MenuItem::linkToCrud('Attributi', 'fas fa-user-shield', Attribute::class),
@@ -57,6 +61,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Pallini Abilità', 'fas fa-ellipsis-h', SkillDot::class),
             MenuItem::linkToCrud('Pallini Background', 'fas fa-ellipsis-h', BackgroundDot::class),
         ]);
-        yield MenuItem::linkToCrud('Utenti', 'fas fa-user-edit', User::class);
+        yield MenuItem::linkToCrud('Oggetti', 'fas fa-box-open', Item::class);
+
     }
 }
