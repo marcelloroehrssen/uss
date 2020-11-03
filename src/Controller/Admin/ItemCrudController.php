@@ -13,9 +13,21 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ItemCrudController extends AbstractCrudController
 {
+    private string $itemImagesPath;
+
+    /**
+     * ItemCrudController constructor.
+     * @param string $itemImagesPath
+     */
+    public function __construct(string $itemImagesPath)
+    {
+        $this->itemImagesPath = $itemImagesPath;
+    }
+
     public static function getEntityFqcn(): string
     {
         return Item::class;
@@ -43,7 +55,12 @@ class ItemCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            ImageField::new('image', 'Immagine'),
+            ImageField::new('imageFile', 'Immagine')
+                ->setFormType(VichImageType::class)
+                ->onlyOnForms(),
+            ImageField::new('image', 'Immagine')
+                ->onlyOnIndex()
+                ->setBasePath($this->itemImagesPath),
             IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Nome'),
             TextareaField::new('description', 'Descrizione'),

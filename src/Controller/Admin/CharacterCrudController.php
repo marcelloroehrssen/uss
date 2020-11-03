@@ -88,7 +88,7 @@ class CharacterCrudController extends AbstractCrudController
             AssociationField::new('job', 'Mestiere'),
             AssociationField::new('jobSkills', 'Abilità di mestiere')->hideOnIndex(),
 
-            FormField::addPanel('Abilità')->setFormType(),
+            FormField::addPanel('Abilità'),
             CollectionField::new('characterSkills', 'Abilità')
                 ->allowDelete(true)
                 ->allowAdd(true)
