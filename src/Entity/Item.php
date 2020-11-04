@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ItemRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 
@@ -22,16 +25,19 @@ class Item
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("exposed")
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups("exposed")
      */
     private $description;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("exposed")
      */
     private $isConsumable;
 
@@ -43,6 +49,7 @@ class Item
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("exposed")
      */
     private $image;
 
@@ -50,6 +57,27 @@ class Item
      * @ORM\Column(type="datetime")
      */
     private $uploadedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=InventoryEntry::class, mappedBy="item")
+     */
+    private $inventoryEntries;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups("exposed")
+     */
+    private $cost;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $enabled = 1;
+
+    public function __construct()
+    {
+        $this->inventoryEntries = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -126,6 +154,66 @@ class Item
     public function setUploadedAt(\DateTimeInterface $uploadedAt): self
     {
         $this->uploadedAt = $uploadedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|InventoryEntry[]
+     */
+    public function getInventoryEntries(): Collection
+    {
+        return $this->inventoryEntries;
+    }
+
+    public function addInventoryEntry(InventoryEntry $inventoryEntry): self
+    {
+        if (!$this->inventoryEntries->contains($inventoryEntry)) {
+            $this->inventoryEntries[] = $inventoryEntry;
+            $inventoryEntry->setItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInventoryEntry(InventoryEntry $inventoryEntry): self
+    {
+        if ($this->inventoryEntries->contains($inventoryEntry)) {
+            $this->inventoryEntries->removeElement($inventoryEntry);
+            // set the owning side to null (unless already changed)
+            if ($inventoryEntry->getItem() === $this) {
+                $inventoryEntry->setItem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
+    public function getCost(): ?int
+    {
+        return $this->cost;
+    }
+
+    public function setCost(int $cost): self
+    {
+        $this->cost = $cost;
+
+        return $this;
+    }
+
+    public function getEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
 
         return $this;
     }

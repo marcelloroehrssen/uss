@@ -11,6 +11,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -48,7 +50,9 @@ class ItemCrudController extends AbstractCrudController
         return $filters
             ->add('name')
             ->add('description')
+            ->add('cost')
             ->add('isConsumable')
+            ->add('enabled')
             ;
     }
 
@@ -64,7 +68,9 @@ class ItemCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Nome'),
             TextareaField::new('description', 'Descrizione'),
+            IntegerField::new('cost', 'Costo'),
             BooleanField::new('isConsumable', 'Consumabile'),
+            BooleanField::new('enabled', 'Abilitato'),
         ];
     }
 }

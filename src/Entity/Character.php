@@ -113,6 +113,11 @@ class Character
      */
     private $characterBackgrounds;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Inventory::class, mappedBy="owner")
+     */
+    private $inventories;
+
     public function __construct()
     {
         $this->characterAttributes = new ArrayCollection();
@@ -120,6 +125,7 @@ class Character
         $this->defects = new ArrayCollection();
         $this->characterSkills = new ArrayCollection();
         $this->characterBackgrounds = new ArrayCollection();
+        $this->inventories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -446,5 +452,41 @@ class Character
     public function preUpdate()
     {
         $this->modificationDate = new \DateTime();
+    }
+
+    /**
+     * @return Collection|Inventory[]
+     */
+    public function getInventories(): Collection
+    {
+        return $this->inventories;
+    }
+
+    public function addInventory(Inventory $inventory): self
+    {
+        if (!$this->inventories->contains($inventory)) {
+            $this->inventories[] = $inventory;
+            $inventory->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInventory(Inventory $inventory): self
+    {
+        if ($this->inventories->contains($inventory)) {
+            $this->inventories->removeElement($inventory);
+            // set the owning side to null (unless already changed)
+            if ($inventory->getOwner() === $this) {
+                $inventory->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 }

@@ -11,6 +11,7 @@ use App\Entity\Defect;
 use App\Entity\Faction;
 use App\Entity\Faith;
 use App\Entity\IntroductionText;
+use App\Entity\Inventory;
 use App\Entity\Item;
 use App\Entity\Job;
 use App\Entity\JobType;
@@ -46,8 +47,11 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Testi Introduttivi', 'fas fa-spell-check', IntroductionText::class);
         yield MenuItem::linkToCrud('Utenti', 'fas fa-user-edit', User::class);
-        yield MenuItem::linkToCrud('Personaggi', 'far fa-id-card', Character::class);
-        yield MenuItem::subMenu('Creazione PG', 'fas fa-street-view')->setSubItems([
+        yield MenuItem::subMenu('Personaggi', 'fas fa-street-view')->setSubItems([
+            MenuItem::linkToCrud('Lista', 'fas fa-users', Character::class),
+            MenuItem::linkToCrud('Inventari', 'fas fa-warehouse', Inventory::class)
+        ]);
+        yield MenuItem::subMenu('Creazione PG', 'fas fa-user-plus')->setSubItems([
             MenuItem::linkToCrud('Difetti', 'fas fa-blind', Defect::class),
             MenuItem::linkToCrud('Attributi', 'fas fa-user-shield', Attribute::class),
             MenuItem::linkToCrud('Fedi', 'fas fa-pray', Faith::class),

@@ -134,7 +134,21 @@ class LookupController extends AbstractController
         $data = $introductionTextRepository->findAll();
         return $this->json($data, 200, [], [
             'groups' => 'exposed',
-            'dots' => AbstractMinimalNormalizer::TYPE_MINIMAL
+        ]);
+    }
+
+    /**
+     * @Route("/items", name="lookup_items")
+     * @param Repository\ItemRepository $itemRepository
+     * @return JsonResponse
+     */
+    public function items(Repository\ItemRepository $itemRepository)
+    {
+        $data = $itemRepository->findBy([
+            'enabled' => true
+        ]);
+        return $this->json($data, 200, [], [
+            'groups' => 'exposed',
         ]);
     }
 }
