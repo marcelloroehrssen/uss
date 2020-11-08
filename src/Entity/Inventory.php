@@ -32,7 +32,7 @@ class Inventory
     private $label;
 
     /**
-     * @ORM\OneToMany(targetEntity=InventoryEntry::class, mappedBy="inventory", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=InventoryEntry::class, mappedBy="inventory", cascade={"persist"}, orphanRemoval=true)
      * @Groups("exposed")
      */
     private $entries;

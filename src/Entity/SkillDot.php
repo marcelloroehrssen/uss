@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SkillDot extends Dot
 {
     /**
-     * @ORM\ManyToOne(targetEntity=Skill::class, inversedBy="dot")
+     * @ORM\ManyToOne(targetEntity=Skill::class, inversedBy="dots")
      * @ORM\JoinColumn(nullable=false, nullable=true)
      */
     private $skill;

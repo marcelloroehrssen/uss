@@ -57,9 +57,15 @@ class User implements UserInterface
      */
     private $characters;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Downtime::class, mappedBy="storyTeller")
+     */
+    private $downtimes;
+
     public function __construct()
     {
         $this->characters = new ArrayCollection();
+        $this->downtimes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -198,5 +204,36 @@ class User implements UserInterface
     public function __toString()
     {
         return $this->getUsername();
+    }
+
+    /**
+     * @return Collection|Downtime[]
+     */
+    public function getDowntimes(): Collection
+    {
+        return $this->downtimes;
+    }
+
+    public function addDowntime(Downtime $downtime): self
+    {
+        if (!$this->downtimes->contains($downtime)) {
+            $this->downtimes[] = $downtime;
+            $downtime->setStoryTeller($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDowntime(Downtime $downtime): self
+    {
+        if ($this->downtimes->contains($downtime)) {
+            $this->downtimes->removeElement($downtime);
+            // set the owning side to null (unless already changed)
+            if ($downtime->getStoryTeller() === $this) {
+                $downtime->setStoryTeller(null);
+            }
+        }
+
+        return $this;
     }
 }

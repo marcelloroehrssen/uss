@@ -1,0 +1,20 @@
+.comment {
+    background: var(--content-panel-bg);
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.comment p {
+    margin-bottom: 0;
+}
+
+.comment p.author {
+    font-size: .685rem;
+    font-weight: bold;
+}
+
+.comment span.created_at {
+    font-size: .685rem;
+}

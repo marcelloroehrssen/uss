@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class BackgroundDot extends Dot
 {
     /**
-     * @ORM\ManyToOne(targetEntity=Background::class, inversedBy="dot")
+     * @ORM\ManyToOne(targetEntity=Background::class, inversedBy="dots")
      */
     private $background;
 

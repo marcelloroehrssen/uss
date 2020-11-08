@@ -74,9 +74,15 @@ class Item
      */
     private $enabled = 1;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=DowntimeDefinition::class, mappedBy="items")
+     */
+    private $downtimeDefinitions;
+
     public function __construct()
     {
         $this->inventoryEntries = new ArrayCollection();
+        $this->downtimeDefinitions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -214,6 +220,34 @@ class Item
     public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DowntimeDefinition[]
+     */
+    public function getDowntimeDefinitions(): Collection
+    {
+        return $this->downtimeDefinitions;
+    }
+
+    public function addDowntimeDefinition(DowntimeDefinition $downtimeDefinition): self
+    {
+        if (!$this->downtimeDefinitions->contains($downtimeDefinition)) {
+            $this->downtimeDefinitions[] = $downtimeDefinition;
+            $downtimeDefinition->addItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDowntimeDefinition(DowntimeDefinition $downtimeDefinition): self
+    {
+        if ($this->downtimeDefinitions->contains($downtimeDefinition)) {
+            $this->downtimeDefinitions->removeElement($downtimeDefinition);
+            $downtimeDefinition->removeItem($this);
+        }
 
         return $this;
     }

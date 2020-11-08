@@ -8,6 +8,8 @@ use App\Entity\Background;
 use App\Entity\BackgroundDot;
 use App\Entity\Character;
 use App\Entity\Defect;
+use App\Entity\Downtime;
+use App\Entity\DowntimeDefinition;
 use App\Entity\Faction;
 use App\Entity\Faith;
 use App\Entity\IntroductionText;
@@ -49,7 +51,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Utenti', 'fas fa-user-edit', User::class);
         yield MenuItem::subMenu('Personaggi', 'fas fa-street-view')->setSubItems([
             MenuItem::linkToCrud('Lista', 'fas fa-users', Character::class),
-            MenuItem::linkToCrud('Inventari', 'fas fa-warehouse', Inventory::class)
+            MenuItem::linkToCrud('Inventari', 'fas fa-warehouse', Inventory::class),
+            MenuItem::linkToCrud('Azioni in narrativa', 'fas fa-briefcase-medical', Downtime::class)
         ]);
         yield MenuItem::subMenu('Creazione PG', 'fas fa-user-plus')->setSubItems([
             MenuItem::linkToCrud('Difetti', 'fas fa-blind', Defect::class),
@@ -65,6 +68,7 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Pallini Abilità', 'fas fa-ellipsis-h', SkillDot::class),
             MenuItem::linkToCrud('Pallini Background', 'fas fa-ellipsis-h', BackgroundDot::class),
         ]);
+        yield MenuItem::linkToCrud('Definizione Azioni', 'fas fa-briefcase', DowntimeDefinition::class);
         yield MenuItem::linkToCrud('Oggetti', 'fas fa-box-open', Item::class);
 
     }

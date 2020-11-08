@@ -1,0 +1,33 @@
+.downtime-definition .item {
+    position:relative;
+    display: inline-block;
+}
+.downtime-definition .item .cross {
+    display:none;
+}
+.downtime-definition .item.is-present .cross {
+    display: block;
+    position:absolute;
+    width:15px;
+    height:15px;
+    top:7px;
+    left:7px;
+    background:red;
+    border-radius: 15px;
+}
+
+.downtime-definition .item.is-present .cross.green {
+    background:green;
+}
+.downtime-definition .item.is-present .cross.yellow {
+    background:#ffcc00;
+}
+.downtime-definition .item.is-present .cross.red {
+    background:red;
+}
+
+.ea-edit .form-widget input.form-control,
+.ea-edit .form-widget select.form-control,
+.ea-edit .form-widget textarea.form-control {
+    max-width: none;
+}

@@ -19,6 +19,7 @@ class InventoryEntry
     private $id;
 
     /**
+     * @var Item
      * @ORM\ManyToOne(targetEntity=Item::class, inversedBy="inventoryEntries")
      * @Groups("exposed")
      */
@@ -34,6 +35,11 @@ class InventoryEntry
      * @ORM\ManyToOne(targetEntity=Inventory::class, inversedBy="entries")
      */
     private $inventory;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Downtime::class, inversedBy="relatedItems", cascade="all")
+     */
+    private $downtime;
 
     public function getId(): ?int
     {
@@ -74,5 +80,22 @@ class InventoryEntry
         $this->inventory = $inventory;
 
         return $this;
+    }
+
+    public function getDowntime(): ?Downtime
+    {
+        return $this->downtime;
+    }
+
+    public function setDowntime(?Downtime $downtime): self
+    {
+        $this->downtime = $downtime;
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->item->getName();
     }
 }

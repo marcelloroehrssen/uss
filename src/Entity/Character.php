@@ -79,7 +79,7 @@ class Character
     private $job;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Skill::class, inversedBy="chractersFactionsSkills")
+     * @ORM\ManyToOne(targetEntity=Skill::class, inversedBy="charactersFactionsSkills")
      */
     private $factionSkill;
 
@@ -118,6 +118,11 @@ class Character
      */
     private $inventories;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Downtime::class, mappedBy="characterSheet", orphanRemoval=true)
+     */
+    private $downtimes;
+
     public function __construct()
     {
         $this->characterAttributes = new ArrayCollection();
@@ -126,6 +131,7 @@ class Character
         $this->characterSkills = new ArrayCollection();
         $this->characterBackgrounds = new ArrayCollection();
         $this->inventories = new ArrayCollection();
+        $this->downtimes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -488,5 +494,36 @@ class Character
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection|Downtime[]
+     */
+    public function getDowntimes(): Collection
+    {
+        return $this->downtimes;
+    }
+
+    public function addDowntime(Downtime $downtime): self
+    {
+        if (!$this->downtimes->contains($downtime)) {
+            $this->downtimes[] = $downtime;
+            $downtime->setCharacterSheet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDowntime(Downtime $downtime): self
+    {
+        if ($this->downtimes->contains($downtime)) {
+            $this->downtimes->removeElement($downtime);
+            // set the owning side to null (unless already changed)
+            if ($downtime->getCharacterSheet() === $this) {
+                $downtime->setCharacterSheet(null);
+            }
+        }
+
+        return $this;
     }
 }
