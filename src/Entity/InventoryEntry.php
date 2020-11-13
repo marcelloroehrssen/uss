@@ -38,6 +38,7 @@ class InventoryEntry
 
     /**
      * @ORM\ManyToOne(targetEntity=Downtime::class, inversedBy="relatedItems", cascade="all")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $downtime;
 

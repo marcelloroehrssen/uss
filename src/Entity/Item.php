@@ -16,10 +16,33 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 class Item
 {
+    const TYPE_WEAPON = 'armi';
+    const TYPE_ARMOR_SHIELD = 'armature scudi';
+    const TYPE_CRAFT_TOOL = 'attrezzi da artigianato';
+    const TYPE_ST_TOOL = 'attrezzi in narrativa';
+    const TYPE_TRANSPORT = 'attrezzi in narrativa';
+    const TYPE_MONOUSO = 'oggetti monouso';
+    const TYPE_RESOURCE = 'risorse';
+    const TYPE_DRESS = 'abiti';
+    const TYPE_OTHER = 'varie';
+
+    const TYPES = [
+        self::TYPE_WEAPON => 'armi',
+        self::TYPE_ARMOR_SHIELD => 'armature scudi',
+        self::TYPE_CRAFT_TOOL => 'attrezzi da artigianato',
+        self::TYPE_ST_TOOL => 'attrezzi in narrativa',
+        self::TYPE_TRANSPORT => 'attrezzi in narrativa',
+        self::TYPE_MONOUSO => 'oggetti monouso',
+        self::TYPE_RESOURCE => 'risorse',
+        self::TYPE_DRESS => 'abiti',
+        self::TYPE_OTHER => 'varie',
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("exposed")
      */
     private $id;
 
@@ -78,6 +101,30 @@ class Item
      * @ORM\ManyToMany(targetEntity=DowntimeDefinition::class, mappedBy="items")
      */
     private $downtimeDefinitions;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups("exposed")
+     */
+    private $dots;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups("exposed")
+     */
+    private $value;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("exposed")
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups("exposed")
+     */
+    private $max;
 
     public function __construct()
     {
@@ -248,6 +295,54 @@ class Item
             $this->downtimeDefinitions->removeElement($downtimeDefinition);
             $downtimeDefinition->removeItem($this);
         }
+
+        return $this;
+    }
+
+    public function getDots(): ?int
+    {
+        return $this->dots;
+    }
+
+    public function setDots(int $dots): self
+    {
+        $this->dots = $dots;
+
+        return $this;
+    }
+
+    public function getValue(): ?int
+    {
+        return $this->value;
+    }
+
+    public function setValue(int $value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getMax(): ?int
+    {
+        return $this->max;
+    }
+
+    public function setMax(int $max): self
+    {
+        $this->max = $max;
 
         return $this;
     }

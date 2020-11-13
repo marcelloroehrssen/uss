@@ -6,6 +6,7 @@ use App\Repository\DowntimeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=DowntimeRepository::class)
@@ -17,11 +18,13 @@ class Downtime
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("exposed")
      */
     private $id;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("exposed")
      */
     private $description;
 
@@ -33,26 +36,31 @@ class Downtime
 
     /**
      * @ORM\OneToMany(targetEntity=InventoryEntry::class, mappedBy="downtime", fetch="EAGER")
+     * @Groups("exposed")
      */
     private $relatedItems;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("exposed")
      */
     private $name;
 
     /**
      * @ORM\ManyToOne(targetEntity=DowntimeDefinition::class, inversedBy="downtimes")
+     * @Groups("exposed")
      */
     private $downTimeDefinition;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("exposed")
      */
     private $resolution;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("exposed")
      */
     private $resolutionTime;
 
@@ -62,12 +70,13 @@ class Downtime
     private $storyTeller;
 
     /**
-     * @ORM\OneToMany(targetEntity=DowntimeComment::class, mappedBy="downtime")
+     * @ORM\OneToMany(targetEntity=DowntimeComment::class, mappedBy="downtime", cascade={"remove"})
      */
     private $comments;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("exposed")
      */
     private $createdAt;
 

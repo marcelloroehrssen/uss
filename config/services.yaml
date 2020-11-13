@@ -6,7 +6,7 @@
 parameters:
     app.cdn_url: //cdn.unasporcastoria.com
     app.path.item_images: /uploads
-    app.url.item_images: '%app.cdn_url%/item/'
+    app.url.item_images: '%app.cdn_url%/uploads/'
 
 services:
     # default configuration for services in *this* file

@@ -31,7 +31,6 @@ class DowntimeCompleter implements EventSubscriberInterface
     {
         $instance = $event->getEntityInstance();
         if ($instance instanceof Downtime) {
-            dump($this->security->getUser());
             if (null === $instance->getResolutionTime()) {
                 $instance->setStoryTeller($this->security->getUser())
                     ->setResolutionTime(new \DateTime());

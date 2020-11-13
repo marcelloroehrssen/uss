@@ -14,20 +14,21 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ItemCrudController extends AbstractCrudController
 {
-    private string $itemImagesPath;
+    private string $itemImagesUrl;
 
     /**
      * ItemCrudController constructor.
-     * @param string $itemImagesPath
+     * @param string $itemImagesUrl
      */
-    public function __construct(string $itemImagesPath)
+    public function __construct(string $itemImagesUrl)
     {
-        $this->itemImagesPath = $itemImagesPath;
+        $this->itemImagesUrl = $itemImagesUrl;
     }
 
     public static function getEntityFqcn(): string
@@ -49,6 +50,9 @@ class ItemCrudController extends AbstractCrudController
     {
         return $filters
             ->add('name')
+            ->add('type')
+            ->add('value')
+            ->add('dots')
             ->add('description')
             ->add('cost')
             ->add('isConsumable')
@@ -64,11 +68,15 @@ class ItemCrudController extends AbstractCrudController
                 ->onlyOnForms(),
             ImageField::new('image', 'Immagine')
                 ->onlyOnIndex()
-                ->setBasePath($this->itemImagesPath),
+                ->setBasePath($this->itemImagesUrl),
             IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Nome'),
-            TextareaField::new('description', 'Descrizione'),
+            ChoiceField::new('type', 'Tipologia')->setChoices(Item::TYPES),
+            TextEditorField::new('description', 'Descrizione'),
             IntegerField::new('cost', 'Costo'),
+            IntegerField::new('dots', 'Pallini'),
+            IntegerField::new('value', 'Punti oggetto'),
+            IntegerField::new('max', 'Massimo')->setHelp('Numero di volte in cui questo oggetto è acquistabile in creazione'),
             BooleanField::new('isConsumable', 'Consumabile'),
             BooleanField::new('enabled', 'Abilitato'),
         ];

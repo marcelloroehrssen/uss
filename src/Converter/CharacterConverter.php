@@ -6,6 +6,8 @@ use App\Entity\Character;
 use App\Entity\CharacterAttribute;
 use App\Entity\CharacterBackground;
 use App\Entity\CharacterSkill;
+use App\Entity\Inventory;
+use App\Entity\InventoryEntry;
 use App\Repository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
@@ -21,6 +23,7 @@ class CharacterConverter implements ParamConverterInterface
     private Repository\JobRepository $jobRepository;
     private Repository\SkillRepository $skillRepository;
     private Repository\BackgroundRepository $backgroundRepository;
+    private Repository\ItemRepository $itemRepository;
 
     /**
      * CharacterConverter constructor.
@@ -32,6 +35,7 @@ class CharacterConverter implements ParamConverterInterface
      * @param Repository\JobRepository $jobRepository
      * @param Repository\SkillRepository $skillRepository
      * @param Repository\BackgroundRepository $backgroundRepository
+     * @param Repository\ItemRepository $itemRepository
      */
     public function __construct(
         Repository\CharacterRepository $characterRepository,
@@ -41,7 +45,8 @@ class CharacterConverter implements ParamConverterInterface
         Repository\DefectRepository $defectRepository,
         Repository\JobRepository $jobRepository,
         Repository\SkillRepository $skillRepository,
-        Repository\BackgroundRepository $backgroundRepository)
+        Repository\BackgroundRepository $backgroundRepository,
+        Repository\ItemRepository $itemRepository)
     {
         $this->characterRepository = $characterRepository;
         $this->attributeRepository = $attributeRepository;
@@ -51,6 +56,7 @@ class CharacterConverter implements ParamConverterInterface
         $this->jobRepository = $jobRepository;
         $this->skillRepository = $skillRepository;
         $this->backgroundRepository = $backgroundRepository;
+        $this->itemRepository = $itemRepository;
     }
 
 
@@ -64,7 +70,7 @@ class CharacterConverter implements ParamConverterInterface
         $character->setFaith($this->faithRepository->findOneBy(['name' => $decoded['faith']]));
 
         $character->setFaction($this->factionRepository->findOneBy(['name' => $decoded['faction']]));
-        $character->setFactionSkill($this->skillRepository->findOneBy(['name' => $decoded['factionSkills']]));
+        $character->setFactionSkill($this->skillRepository->findOneBy(['name' => $decoded['factionSkill']]));
 
         foreach (['physical','mental','social'] as $attribute) {
             $characterAttribute = new CharacterAttribute();
@@ -106,6 +112,17 @@ class CharacterConverter implements ParamConverterInterface
             $background->setValue($value);
             $character->addCharacterBackground($background);
         }
+
+        $inventory = new Inventory();
+        $inventory->setLabel('default');
+        foreach ($decoded['items'] as $itemId => $quantity) {
+            $inventoryEntry = new InventoryEntry();
+            $inventoryEntry->setItem($this->itemRepository->find($itemId));
+            $inventoryEntry->setQuantity($quantity);
+
+            $inventory->addEntry($inventoryEntry);
+        }
+        $character->addInventory($inventory);
 
         $request->attributes->set($configuration->getName(), $character);
 

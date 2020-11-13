@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Item;
 use App\Normalizer\AbstractMinimalNormalizer;
 use App\Repository;
+use App\Repository\DowntimeDefinitionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -147,6 +149,28 @@ class LookupController extends AbstractController
         $data = $itemRepository->findBy([
             'enabled' => true
         ]);
+        return $this->json($data, 200, [], [
+            'groups' => 'exposed',
+        ]);
+    }
+
+    /**
+     * @Route("/items_types", name="lookup_items_type")
+     * @return JsonResponse
+     */
+    public function itemsTypes()
+    {
+        return $this->json(array_values(Item::TYPES));
+    }
+
+    /**
+     * @Route("/downtime_definition", name="lookup_downtime_definition")
+     * @param Repository\DowntimeDefinitionRepository $downtimeDefinitionRepository
+     * @return JsonResponse
+     */
+    public function downtimeDefinition(Repository\DowntimeDefinitionRepository $downtimeDefinitionRepository)
+    {
+        $data = $downtimeDefinitionRepository->findAll();
         return $this->json($data, 200, [], [
             'groups' => 'exposed',
         ]);

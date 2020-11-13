@@ -6,6 +6,7 @@ use App\Repository\DowntimeDefinitionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=DowntimeDefinitionRepository::class)
@@ -21,21 +22,25 @@ class DowntimeDefinition
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("exposed")
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups("exposed")
      */
     private $description;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("exposed")
      */
     private $note;
 
     /**
      * @ORM\ManyToMany(targetEntity=Item::class, inversedBy="downtimeDefinitions")
+     * @Groups("exposed")
      */
     private $items;
 

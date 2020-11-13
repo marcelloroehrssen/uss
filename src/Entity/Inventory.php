@@ -41,7 +41,7 @@ class Inventory
      * @ORM\Column(type="boolean")
      * @Groups("exposed")
      */
-    private $isPublic;
+    private $isPublic = false;
 
     public function __construct()
     {

@@ -9,13 +9,19 @@
             <strong>nome</strong>: {{ item.name }}
         </li>
         <li>
-            <strong>descrizione</strong>: {{ item.description }}
+            <strong>descrizione</strong>: {{ item.description | raw }}
         </li>
         <li>
             <strong>è consumabile</strong>: {{ item.isConsumable ? 'si' : 'no' }}
         </li>
         <li>
             <strong>costo</strong>: {{ item.cost }}
+        </li>
+        <li>
+            <strong>Pallini</strong>: {{ item.dots }}
+        </li>
+        <li>
+            <strong>Punti oggetto</strong>: {{ item.value }}
         </li>
     </ul>
 {% endblock %}

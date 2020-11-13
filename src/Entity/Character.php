@@ -114,7 +114,7 @@ class Character
     private $characterBackgrounds;
 
     /**
-     * @ORM\OneToMany(targetEntity=Inventory::class, mappedBy="owner")
+     * @ORM\OneToMany(targetEntity=Inventory::class, mappedBy="owner", cascade={"persist", "remove"})
      */
     private $inventories;
 

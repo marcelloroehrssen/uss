@@ -2,25 +2,21 @@
 
 namespace App\Controller;
 
-use App\Repository\CharacterRepository;
 use App\Repository\InventoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 class InventoryController extends AbstractController
 {
+    use CharacterAware;
+
     /**
-     * @Route("/inventories", name="inventory")
+     * @Route("/inventory", name="inventory")
      */
-    public function read(InventoryRepository $inventoryRepository, CharacterRepository $characterRepository)
+    public function read(InventoryRepository $inventoryRepository)
     {
-        $character = $characterRepository->findOneBy([
-            'user' => $this->getUser(),
-            'enabled' => true
-        ]);
         $inventories = $inventoryRepository->findBy([
-            'owner' => $character
+            'owner' => $this->getCharacter()
         ]);
 
         return $this->json($inventories, 200, [], ['groups' => 'exposed']);
