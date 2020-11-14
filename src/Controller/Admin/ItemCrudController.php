@@ -53,8 +53,9 @@ class ItemCrudController extends AbstractCrudController
             ->add('type')
             ->add('value')
             ->add('dots')
+            ->add('bonus')
+            ->add('structPoint')
             ->add('description')
-            ->add('cost')
             ->add('isConsumable')
             ->add('enabled')
             ;
@@ -73,10 +74,13 @@ class ItemCrudController extends AbstractCrudController
             TextField::new('name', 'Nome'),
             ChoiceField::new('type', 'Tipologia')->setChoices(Item::TYPES),
             TextEditorField::new('description', 'Descrizione'),
-            IntegerField::new('cost', 'Costo'),
-            IntegerField::new('dots', 'Pallini'),
+            IntegerField::new('dots', 'Pallini')->setFormTypeOption('attr', ['min' => 0, 'max' => 3]),
+            IntegerField::new('structPoint', 'Punti usura massimi'),
+            IntegerField::new('bonus', 'Bonus alle azioni')
+                ->setHelp('Il bonus sarà automaticamente applicato ai tiri di risoluzione delle azioni'),
             IntegerField::new('value', 'Punti oggetto'),
-            IntegerField::new('max', 'Massimo')->setHelp('Numero di volte in cui questo oggetto è acquistabile in creazione'),
+            IntegerField::new('max', 'Massimo')
+                ->setHelp('Numero di volte in cui questo oggetto è acquistabile in creazione'),
             BooleanField::new('isConsumable', 'Consumabile'),
             BooleanField::new('enabled', 'Abilitato'),
         ];

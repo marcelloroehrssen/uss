@@ -16,6 +16,10 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 class Item
 {
+    const MACRO_TYPE_TOOL = 'armi';
+    const MACRO_TYPE_BUILDING = 'edifici';
+    const MACRO_TYPE_TERRAIN = 'terreni';
+
     const TYPE_WEAPON = 'armi';
     const TYPE_ARMOR_SHIELD = 'armature scudi';
     const TYPE_CRAFT_TOOL = 'attrezzi da artigianato';
@@ -23,8 +27,14 @@ class Item
     const TYPE_TRANSPORT = 'attrezzi in narrativa';
     const TYPE_MONOUSO = 'oggetti monouso';
     const TYPE_RESOURCE = 'risorse';
-    const TYPE_DRESS = 'abiti';
+    const TYPE_DRESS = 'vestiti';
     const TYPE_OTHER = 'varie';
+
+    const MACRO_TYPES = [
+        self::MACRO_TYPE_TOOL,
+        self::MACRO_TYPE_BUILDING,
+        self::MACRO_TYPE_TERRAIN
+    ];
 
     const TYPES = [
         self::TYPE_WEAPON => 'armi',
@@ -34,7 +44,7 @@ class Item
         self::TYPE_TRANSPORT => 'attrezzi in narrativa',
         self::TYPE_MONOUSO => 'oggetti monouso',
         self::TYPE_RESOURCE => 'risorse',
-        self::TYPE_DRESS => 'abiti',
+        self::TYPE_DRESS => 'vestiti',
         self::TYPE_OTHER => 'varie',
     ];
 
@@ -93,6 +103,12 @@ class Item
     private $cost;
 
     /**
+     * @ORM\Column(type="integer")
+     * @Groups("exposed")
+     */
+    private $costSell;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $enabled = 1;
@@ -125,6 +141,19 @@ class Item
      * @Groups("exposed")
      */
     private $max;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups("exposed")
+     */
+    private $bonus;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups("exposed")
+     */
+    private $structPoint;
+
 
     public function __construct()
     {
@@ -343,6 +372,42 @@ class Item
     public function setMax(int $max): self
     {
         $this->max = $max;
+
+        return $this;
+    }
+
+    public function getCostSell(): ?int
+    {
+        return $this->costSell;
+    }
+
+    public function setCostSell(int $costSell): self
+    {
+        $this->costSell = $costSell;
+
+        return $this;
+    }
+
+    public function getBonus(): ?int
+    {
+        return $this->bonus;
+    }
+
+    public function setBonus(int $bonus): self
+    {
+        $this->bonus = $bonus;
+
+        return $this;
+    }
+
+    public function getStructPoint(): ?int
+    {
+        return $this->structPoint;
+    }
+
+    public function setStructPoint(int $structPoint): self
+    {
+        $this->structPoint = $structPoint;
 
         return $this;
     }

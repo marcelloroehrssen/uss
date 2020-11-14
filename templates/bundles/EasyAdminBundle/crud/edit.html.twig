@@ -64,137 +64,141 @@
     </div>
 {% endblock %}
 
+{% block downtime %}
+    {{ block('downtimeDefinition') }}
+    {{ form_start(edit_form) }}
+    <div class="content-panel">
+        <div class="content-panel-body with-background without-header without-footer">
+            <div class="row">
+                <div class="col-sm-6">
+                    <fieldset>
+                        <legend>Azione</legend>
+                        {{ form_row(edit_form.name) }}
+                        {{ form_row(edit_form.description) }}
+                        {{ form_row(edit_form.resolution) }}
+                    </fieldset>
+                </div>
+                <div class="col-sm-3">
+                    <fieldset>
+                        <legend>Tiradadi</legend>
+                        <div>
+                            <p>
+                                <a href="#" data-toggle="modal" data-target="#character-sheet">Vedi la scheda di {{ entity.instance.characterSheet.name }}</a>
+                            </p>
+                        </div>
+                        <div class="input-group">
+                            <input id="dice" type="number" class="form-control" placeholder="numero di d10" />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary"
+                                        type="button"
+                                        onClick="throwDice($('#dice'))">Tira</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Commenti</legend>
+                        <ul id="comments-container" class="list-unstyled">
+                            {% for comment in entity.instance.comments %}
+                                <li class="comment">
+                                    <p class="author">{{ comment.author.email }}</p>
+                                    <p class="text">{{ comment.text | raw }} -
+                                        <span class="created_at"
+                                              data-toggle="tooltip"
+                                              data-placement="bottom"
+                                              title="{{ comment.createdAt.format('H:i:s d/m/Y') }}">{{ comment.createdAt | time_diff }}</span>
+                                    </p>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <p class="text-center"><em>Non ci sono commenti</em></p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="input-group">
+                            <input id="comment-box" type="text" class="form-control" placeholder="Commenta..."
+                                   aria-label="commento">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary"
+                                        type="button"
+                                        onClick="addComment('{{ entity.instance.id }}', $('#comment-box').val(), $('#comments-container'))">
+                                    Invia
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-sm-3">
+                    <fieldset>
+                        <legend>Informazioni</legend>
+                        {{ form_row(edit_form.createdAt) }}
+                        {{ form_row(edit_form.characterSheet) }}
+                        {{ form_row(edit_form.relatedItems) }}
+                        {{ form_row(edit_form.downTimeDefinition) }}
+                    </fieldset>
+                    <fieldset>
+                        <legend>Risoluzione</legend>
+                        {{ form_row(edit_form.storyTeller) }}
+                        {{ form_row(edit_form.resolutionTime) }}
+                        {{ form_row(edit_form._token) }}
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_end(edit_form) }}
+    {% set character = entity.instance.characterSheet %}
+    <div id="character-sheet" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Scheda di {{ character.name }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="title">
+                        <u>Modalità</u><br />
+                        di gioco: <strong>{{ character.mode == 1 ? 'Softcore' : 'Hardcore' }}</strong> - Difetti:<strong>{{ character.defectMode == 1 ? 'Casuale' : 'Non Casuale' }}</strong>
+                    </p>
+                    <p class="title">
+                        <u>Base</u><br />
+                        Fede: <strong>{{ character.faith.name }}</strong> - Fazione: <strong>{{ character.faction.name }}</strong> - Mestiere: <strong>{{ character.job.name }}</strong>
+                    </p>
+                    <p class="title">
+                        <u>Attributi</u><br />
+                        {{ character.characterAttributes[0].attribute.name }}: <strong>{{ character.characterAttributes[0].value }}</strong> - {{ character.characterAttributes[1].attribute.name }}: <strong>{{ character.characterAttributes[1].value }}</strong> - {{ character.characterAttributes[2].attribute.name }}: <strong>{{ character.characterAttributes[2].value }}</strong>
+                    </p>
+                    <p>
+                        <u>Difetti</u><br />
+                        {% for defect in character.defects %}
+                            <strong>{{ defect.name }}</strong>{{ loop.last ? '' : ', ' }}
+                        {% endfor %}
+                    </p>
+                    <p>
+                        <u>Abilità</u><br />
+                        {% for skill in character.characterSkills %}
+                            {{ skill.skill.name }}: <strong>{{ skill.value }}</strong><br />
+                        {% endfor %}
+                    </p>
+                    <p>
+                        <u>Background</u><br />
+                        {% for background in character.characterBackgrounds %}
+                            {{ background.background.name }}: <strong>{{ background.value }}</strong><br />
+                        {% endfor %}
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block main %}
     {% if entity.fqcn == 'App\\Entity\\Downtime' %}
-        {{ block('downtimeDefinition') }}
-        {{ form_start(edit_form) }}
-        <div class="content-panel">
-            <div class="content-panel-body with-background without-header without-footer">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <fieldset>
-                            <legend>Azione</legend>
-                            {{ form_row(edit_form.name) }}
-                            {{ form_row(edit_form.description) }}
-                            {{ form_row(edit_form.resolution) }}
-                        </fieldset>
-                    </div>
-                    <div class="col-sm-3">
-                        <fieldset>
-                            <legend>Tiradadi</legend>
-                            <div>
-                                <p>
-                                    <a href="#" data-toggle="modal" data-target="#character-sheet">Vedi la scheda di {{ entity.instance.characterSheet.name }}</a>
-                                </p>
-                            </div>
-                            <div class="input-group">
-                                <input id="dice" type="number" class="form-control" placeholder="numero di d10" />
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-primary"
-                                            type="button"
-                                            onClick="throwDice($('#dice'))">Tira</button>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Commenti</legend>
-                            <ul id="comments-container" class="list-unstyled">
-                                {% for comment in entity.instance.comments %}
-                                    <li class="comment">
-                                        <p class="author">{{ comment.author.email }}</p>
-                                        <p class="text">{{ comment.text | raw }} -
-                                            <span class="created_at"
-                                                  data-toggle="tooltip"
-                                                  data-placement="bottom"
-                                                  title="{{ comment.createdAt.format('H:i:s d/m/Y') }}">{{ comment.createdAt | time_diff }}</span>
-                                        </p>
-                                    </li>
-                                {% else %}
-                                    <li>
-                                        <p class="text-center"><em>Non ci sono commenti</em></p>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <div class="input-group">
-                                <input id="comment-box" type="text" class="form-control" placeholder="Commenta..."
-                                       aria-label="commento">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-primary"
-                                            type="button"
-                                            onClick="addComment('{{ entity.instance.id }}', $('#comment-box').val(), $('#comments-container'))">
-                                        Invia
-                                    </button>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                    <div class="col-sm-3">
-                        <fieldset>
-                            <legend>Informazioni</legend>
-                            {{ form_row(edit_form.createdAt) }}
-                            {{ form_row(edit_form.characterSheet) }}
-                            {{ form_row(edit_form.relatedItems) }}
-                            {{ form_row(edit_form.downTimeDefinition) }}
-                        </fieldset>
-                        <fieldset>
-                            <legend>Risoluzione</legend>
-                            {{ form_row(edit_form.storyTeller) }}
-                            {{ form_row(edit_form.resolutionTime) }}
-                            {{ form_row(edit_form._token) }}
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{ form_end(edit_form) }}
-        {% set character = entity.instance.characterSheet %}
-        <div id="character-sheet" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Scheda di {{ character.name }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="title">
-                            <u>Modalità</u><br />
-                            di gioco: <strong>{{ character.mode == 1 ? 'Softcore' : 'Hardcore' }}</strong> - Difetti:<strong>{{ character.defectMode == 1 ? 'Casuale' : 'Non Casuale' }}</strong>
-                        </p>
-                        <p class="title">
-                            <u>Base</u><br />
-                            Fede: <strong>{{ character.faith.name }}</strong> - Fazione: <strong>{{ character.faction.name }}</strong> - Mestiere: <strong>{{ character.job.name }}</strong>
-                        </p>
-                        <p class="title">
-                            <u>Attributi</u><br />
-                            {{ character.characterAttributes[0].attribute.name }}: <strong>{{ character.characterAttributes[0].value }}</strong> - {{ character.characterAttributes[1].attribute.name }}: <strong>{{ character.characterAttributes[1].value }}</strong> - {{ character.characterAttributes[2].attribute.name }}: <strong>{{ character.characterAttributes[2].value }}</strong>
-                        </p>
-                        <p>
-                            <u>Difetti</u><br />
-                            {% for defect in character.defects %}
-                                <strong>{{ defect.name }}</strong>{{ loop.last ? '' : ', ' }}
-                            {% endfor %}
-                        </p>
-                        <p>
-                            <u>Abilità</u><br />
-                            {% for skill in character.characterSkills %}
-                                {{ skill.skill.name }}: <strong>{{ skill.value }}</strong><br />
-                            {% endfor %}
-                        </p>
-                        <p>
-                            <u>Background</u><br />
-                            {% for background in character.characterBackgrounds %}
-                                {{ background.background.name }}: <strong>{{ background.value }}</strong><br />
-                            {% endfor %}
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{ block('downtime') }}
     {% else %}
         {% block edit_form %}
             {{ form(edit_form) }}
@@ -243,5 +247,27 @@
                 },
             })
         }
+
+        function hideAddMore() {
+            if ($('#Inventory_entries > .form-group').length >= maxEntry) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        }
+
+        {% if entity.fqcn == 'App\\Entity\\Inventory' %}
+            const maxEntry = $('#Inventory_maxItems').val()
+            $(function () {
+                $('.field-collection-add-button').on('click', function () {
+                    hideAddMore.apply(this);
+                })
+                $('#Inventory_entries').on('click', function (e) {
+                    if ($(e.target).hasClass('fa-times')) {
+                        hideAddMore.apply($('.field-collection-add-button'));
+                    }
+                })
+            })
+        {% endif %}
     </script>
 {% endblock %}

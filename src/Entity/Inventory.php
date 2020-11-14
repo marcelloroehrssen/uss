@@ -43,6 +43,12 @@ class Inventory
      */
     private $isPublic = false;
 
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups("exposed")
+     */
+    private $maxItems = 10;
+
     public function __construct()
     {
         $this->entries = new ArrayCollection();
@@ -116,6 +122,18 @@ class Inventory
     public function setIsPublic(bool $isPublic): self
     {
         $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    public function getMaxItems(): ?int
+    {
+        return $this->maxItems;
+    }
+
+    public function setMaxItems(int $maxItems): self
+    {
+        $this->maxItems = $maxItems;
 
         return $this;
     }

@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class InventoryCrudController extends AbstractCrudController
@@ -44,6 +45,7 @@ class InventoryCrudController extends AbstractCrudController
         return [
             AssociationField::new('owner', 'Proprietario'),
             TextField::new('label', 'Nome'),
+            IntegerField::new('maxItems', 'Slot disponibili'),
             CollectionField::new('entries', 'Item')
                 ->setEntryIsComplex(true)
                 ->setEntryType(InventoryItemType::class),
