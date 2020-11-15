@@ -41,6 +41,7 @@ class AppExtension extends AbstractExtension
             // parameter: ['is_safe' => ['html']]
             // Reference: https://twig.symfony.com/doc/2.x/advanced.html#automatic-escaping
             new TwigFilter('containsItem', [$this, 'containsItem']),
+            new TwigFilter('get_entry', [$this, 'getEntry']),
             new TwigFilter('time_diff', [$this, 'diff'], ['needs_environment' => true]),
         ];
     }
@@ -57,6 +58,13 @@ class AppExtension extends AbstractExtension
         return $inventoryEntry->exists(function (int $index, InventoryEntry $entry) use ($item) {
             return $entry->getItem()->getName() === $item->getName();
         });
+    }
+
+    public function getEntry(PersistentCollection $inventoryEntry, Item $item)
+    {
+        return $inventoryEntry->filter(function (InventoryEntry $entry) use ($item) {
+            return $entry->getItem()->getId() === $item->getId();
+        })->current();
     }
 
     public function getDowntimeItemBadge($inInventory, $isAssigned)

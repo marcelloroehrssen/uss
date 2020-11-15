@@ -31,3 +31,17 @@
 .ea-edit .form-widget textarea.form-control {
     max-width: none;
 }
+.ea-edit .struct-point {
+    display: none;
+    position:absolute;
+    bottom:2px;
+    left:50%;
+}
+.ea-edit .struct-point.remove {
+    transform: translateX(-100%)
+}
+.ea-edit .struct-point.add {}
+
+.item.is-present:hover .struct-point {
+    display: block;
+}

@@ -49,6 +49,11 @@ class DowntimeDefinition
      */
     private $downtimes;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $challenge;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -156,5 +161,17 @@ class DowntimeDefinition
     public function __toString()
     {
         return $this->name;
+    }
+
+    public function getChallenge(): ?int
+    {
+        return $this->challenge;
+    }
+
+    public function setChallenge(int $challenge): self
+    {
+        $this->challenge = $challenge;
+
+        return $this;
     }
 }

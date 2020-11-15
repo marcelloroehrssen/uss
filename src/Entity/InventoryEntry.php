@@ -42,6 +42,11 @@ class InventoryEntry
      */
     private $downtime;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $structPoint;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -98,5 +103,17 @@ class InventoryEntry
     public function __toString()
     {
         return $this->item->getName();
+    }
+
+    public function getStructPoint(): ?int
+    {
+        return $this->structPoint;
+    }
+
+    public function setStructPoint(int $structPoint): self
+    {
+        $this->structPoint = $structPoint;
+
+        return $this;
     }
 }

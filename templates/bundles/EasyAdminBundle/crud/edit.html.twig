@@ -44,6 +44,7 @@
                     {% set isInInventory = (entity.instance.characterSheet.inventories[0].entries|containsItem(item)) ? true : false %}
                     {% set isAssigned = (entity.instance.relatedItems|containsItem(item)) ? true : false %}
                     {% set badge = getDowntimeItemBadge(isInInventory, isAssigned) %}
+                    {% set relatedItem = entity.instance.relatedItems|get_entry(item) %}
                     <span class="item is-present">
                         <img data-placement="top"
                              data-toggle="tooltip"
@@ -57,6 +58,22 @@
                               data-toggle="tooltip"
                               title="{{ badge[1] }}"
                               class="cross {{ badge[0] }}"></span>
+                        {% if isAssigned %}
+                        <button data-toggle="tooltip"
+                                onclick="updateStructPoint({{ (relatedItem.id ?? -1) }}, 'decrement')"
+                                data-placement="top"
+                                title="Rimuovi punto struttura - attuali {{ (relatedItem.structPoint ?? 0) }}/{{ item.structPoint }}"
+                                class="btn btn-secondary struct-point remove">
+                            <span class="fa fa-minus"></span>
+                        </button>
+                        <button data-toggle="tooltip"
+                                onclick="updateStructPoint({{ (relatedItem.id ?? -1) }}, 'increment')"
+                                data-placement="top"
+                                title="Aggiungi punto struttura - attuali {{ (relatedItem.structPoint ?? 0) }}/{{ item.structPoint }}"
+                                class="btn btn-secondary struct-point add">
+                            <span class="fa fa-plus"></span>
+                        </button>
+                        {% endif %}
                     </span>
                 {% endfor %}
             </p>
@@ -213,6 +230,21 @@
 {% block body_javascript %}1
     {{ parent() }}
     <script type="text/javascript">
+
+        function updateStructPoint(itemId, action)
+        {
+            $.ajax({
+                type: "post",
+                url: '/inventory_entry/struct',
+                dataType: "JSON",
+                data: {
+                    id: itemId,
+                    action: action
+                },
+                success: function (data) {
+                }
+            })
+        }
 
         function throwDice(diceNumber) {
             let diceResult = '';

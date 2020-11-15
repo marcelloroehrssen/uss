@@ -51,12 +51,14 @@ class ItemCrudController extends AbstractCrudController
         return $filters
             ->add('name')
             ->add('type')
+            ->add('macroCategory')
             ->add('value')
             ->add('dots')
             ->add('bonus')
             ->add('structPoint')
             ->add('description')
             ->add('isConsumable')
+            ->add('onlyInCreation')
             ->add('enabled')
             ;
     }
@@ -73,7 +75,8 @@ class ItemCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Nome'),
             ChoiceField::new('type', 'Tipologia')->setChoices(Item::TYPES),
-            TextEditorField::new('description', 'Descrizione'),
+            ChoiceField::new('macroCategory', 'Macrocategoria')->setChoices(Item::MACRO_TYPES),
+            TextEditorField::new('description', 'Descrizione')->onlyOnForms(),
             IntegerField::new('dots', 'Pallini')->setFormTypeOption('attr', ['min' => 0, 'max' => 3]),
             IntegerField::new('structPoint', 'Punti usura massimi'),
             IntegerField::new('bonus', 'Bonus alle azioni')
@@ -82,6 +85,7 @@ class ItemCrudController extends AbstractCrudController
             IntegerField::new('max', 'Massimo')
                 ->setHelp('Numero di volte in cui questo oggetto è acquistabile in creazione'),
             BooleanField::new('isConsumable', 'Consumabile'),
+            BooleanField::new('onlyInCreation', 'Solo in creazione')->setHelp('Questo item è disponibile in creazione'),
             BooleanField::new('enabled', 'Abilitato'),
         ];
     }

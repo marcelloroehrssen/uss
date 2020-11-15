@@ -31,21 +31,21 @@ class Item
     const TYPE_OTHER = 'varie';
 
     const MACRO_TYPES = [
-        self::MACRO_TYPE_TOOL,
-        self::MACRO_TYPE_BUILDING,
-        self::MACRO_TYPE_TERRAIN
+        self::MACRO_TYPE_TOOL => self::MACRO_TYPE_TOOL,
+        self::MACRO_TYPE_BUILDING => self::MACRO_TYPE_BUILDING,
+        self::MACRO_TYPE_TERRAIN => self::MACRO_TYPE_TERRAIN
     ];
 
     const TYPES = [
-        self::TYPE_WEAPON => 'armi',
-        self::TYPE_ARMOR_SHIELD => 'armature scudi',
-        self::TYPE_CRAFT_TOOL => 'attrezzi da artigianato',
-        self::TYPE_ST_TOOL => 'attrezzi in narrativa',
-        self::TYPE_TRANSPORT => 'attrezzi in narrativa',
-        self::TYPE_MONOUSO => 'oggetti monouso',
-        self::TYPE_RESOURCE => 'risorse',
-        self::TYPE_DRESS => 'vestiti',
-        self::TYPE_OTHER => 'varie',
+        self::TYPE_WEAPON => self::TYPE_WEAPON,
+        self::TYPE_ARMOR_SHIELD => self::TYPE_ARMOR_SHIELD,
+        self::TYPE_CRAFT_TOOL => self::TYPE_CRAFT_TOOL,
+        self::TYPE_ST_TOOL => self::TYPE_ST_TOOL,
+        self::TYPE_TRANSPORT => self::TYPE_TRANSPORT,
+        self::TYPE_MONOUSO => self::TYPE_MONOUSO,
+        self::TYPE_RESOURCE => self::TYPE_RESOURCE,
+        self::TYPE_DRESS => self::TYPE_DRESS,
+        self::TYPE_OTHER => self::TYPE_OTHER,
     ];
 
     /**
@@ -153,6 +153,16 @@ class Item
      * @Groups("exposed")
      */
     private $structPoint;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $onlyInCreation = true;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $macroCategory;
 
 
     public function __construct()
@@ -408,6 +418,30 @@ class Item
     public function setStructPoint(int $structPoint): self
     {
         $this->structPoint = $structPoint;
+
+        return $this;
+    }
+
+    public function getOnlyInCreation(): ?bool
+    {
+        return $this->onlyInCreation;
+    }
+
+    public function setOnlyInCreation(bool $onlyInCreation): self
+    {
+        $this->onlyInCreation = $onlyInCreation;
+
+        return $this;
+    }
+
+    public function getMacroCategory(): ?string
+    {
+        return $this->macroCategory;
+    }
+
+    public function setMacroCategory(string $macroCategory): self
+    {
+        $this->macroCategory = $macroCategory;
 
         return $this;
     }
