@@ -17,6 +17,7 @@ use App\Entity\Inventory;
 use App\Entity\Item;
 use App\Entity\Job;
 use App\Entity\JobType;
+use App\Entity\Recipe;
 use App\Entity\Skill;
 use App\Entity\SkillDot;
 use App\Entity\SkillGroup;
@@ -40,8 +41,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Una sporca storia - Pannello amministrazione')
-            ;
+            ->setTitle('Una sporca storia - Pannello amministrazione');
     }
 
     public function configureMenuItems(): iterable
@@ -62,13 +62,16 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Mestieri', 'fas fa-user-md', Job::class),
             MenuItem::linkToCrud('Gruppi di Abilità ', 'fas fa-layer-group', SkillGroup::class),
             MenuItem::linkToCrud('Abilità', 'fas fa-user-nurse', Skill::class),
-            MenuItem::linkToCrud('Background', 'fas fa-user-nurse', Background::class),
+            MenuItem::linkToCrud('Background', 'fas fa-user-tag', Background::class),
             MenuItem::linkToCrud('Tipologie di Mestiere', 'fas fa-user-graduate', JobType::class),
             MenuItem::linkToCrud('Pallini Attributi', 'fas fa-ellipsis-h', AttributeDot::class),
             MenuItem::linkToCrud('Pallini Abilità', 'fas fa-ellipsis-h', SkillDot::class),
             MenuItem::linkToCrud('Pallini Background', 'fas fa-ellipsis-h', BackgroundDot::class),
         ]);
-        yield MenuItem::linkToCrud('Definizione Azioni', 'fas fa-briefcase', DowntimeDefinition::class);
+        yield MenuItem::subMenu('Azioni', 'fas fa-snowboarding')->setSubItems([
+            MenuItem::linkToCrud('Definizione', 'fas fa-briefcase', DowntimeDefinition::class),
+            MenuItem::linkToCrud('Ricette', 'fas fa-receipt', Recipe::class)
+        ]);
         yield MenuItem::linkToCrud('Oggetti', 'fas fa-box-open', Item::class);
 
     }

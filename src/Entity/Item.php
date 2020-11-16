@@ -164,11 +164,17 @@ class Item
      */
     private $macroCategory;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Recipe::class, mappedBy="items")
+     */
+    private $recipes;
+
 
     public function __construct()
     {
         $this->inventoryEntries = new ArrayCollection();
         $this->downtimeDefinitions = new ArrayCollection();
+        $this->recipes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -442,6 +448,34 @@ class Item
     public function setMacroCategory(string $macroCategory): self
     {
         $this->macroCategory = $macroCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Recipe[]
+     */
+    public function getRecipes(): Collection
+    {
+        return $this->recipes;
+    }
+
+    public function addRecipe(Recipe $recipe): self
+    {
+        if (!$this->recipes->contains($recipe)) {
+            $this->recipes[] = $recipe;
+            $recipe->addItem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipe(Recipe $recipe): self
+    {
+        if ($this->recipes->contains($recipe)) {
+            $this->recipes->removeElement($recipe);
+            $recipe->removeItem($this);
+        }
 
         return $this;
     }

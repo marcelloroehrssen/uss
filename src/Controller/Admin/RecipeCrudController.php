@@ -2,29 +2,27 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\DowntimeDefinition;
+use App\Entity\Recipe;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-class DowntimeDefinitionCrudController extends AbstractCrudController
+class RecipeCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return DowntimeDefinition::class;
+        return Recipe::class;
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInPlural('Azioni in narrativa')
-            ->setEntityLabelInSingular('Azione in narrativa')
+            ->setEntityLabelInPlural('Ricette')
+            ->setEntityLabelInSingular('Ricetta')
             ->setPageTitle('index', 'Lista delle %entity_label_plural%')
             ->setDateFormat('d F Y')
             ;
@@ -34,8 +32,8 @@ class DowntimeDefinitionCrudController extends AbstractCrudController
     {
         return $filters
             ->add('name')
-            ->add('challenge')
-            ->add('recipes')
+            ->add('downtimeDefinition')
+            ->add('items')
             ;
     }
 
@@ -44,12 +42,9 @@ class DowntimeDefinitionCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
             TextField::new('name', 'Nome'),
-            TextEditorField::new('description', 'Descrizione'),
-            TextEditorField::new('note', 'Note'),
-            IntegerField::new('challenge', 'Difficoltà'),
-            AssociationField::new('items', 'Oggetti necessari'),
-            AssociationField::new('recipes', 'Ricette associate'),
-
+            TextEditorField::new('description', 'Descrizione primaria'),
+            AssociationField::new('downtimeDefinition', 'Definizione'),
+            AssociationField::new('items', 'Oggetti'),
         ];
     }
 }

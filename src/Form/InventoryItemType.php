@@ -3,10 +3,7 @@
 namespace App\Form;
 
 use App\Entity\InventoryEntry;
-use App\Entity\Item;
-use EasyCorp\Bundle\EasyAdminBundle\Form\Type\CrudAutocompleteType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

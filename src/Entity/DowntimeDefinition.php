@@ -51,13 +51,21 @@ class DowntimeDefinition
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("exposed")
      */
     private $challenge;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Recipe::class, mappedBy="downtimeDefinition")
+     * @Groups("exposed")
+     */
+    private $recipes;
 
     public function __construct()
     {
         $this->items = new ArrayCollection();
         $this->downtimes = new ArrayCollection();
+        $this->recipes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -171,6 +179,37 @@ class DowntimeDefinition
     public function setChallenge(int $challenge): self
     {
         $this->challenge = $challenge;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Recipe[]
+     */
+    public function getRecipes(): Collection
+    {
+        return $this->recipes;
+    }
+
+    public function addRecipe(Recipe $recipe): self
+    {
+        if (!$this->recipes->contains($recipe)) {
+            $this->recipes[] = $recipe;
+            $recipe->setDowntimeDefinition($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipe(Recipe $recipe): self
+    {
+        if ($this->recipes->contains($recipe)) {
+            $this->recipes->removeElement($recipe);
+            // set the owning side to null (unless already changed)
+            if ($recipe->getDowntimeDefinition() === $this) {
+                $recipe->setDowntimeDefinition(null);
+            }
+        }
 
         return $this;
     }
