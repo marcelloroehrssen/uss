@@ -45,7 +45,7 @@ class InventoryEntry
     /**
      * @ORM\Column(type="integer")
      */
-    private $structPoint;
+    private $structPoint = 0;
 
     public function getId(): ?int
     {

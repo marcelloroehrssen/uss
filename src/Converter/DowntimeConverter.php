@@ -23,7 +23,8 @@ class DowntimeConverter implements ParamConverterInterface
 
     private Security $security;
     private Repository\DowntimeRepository $downtimeRepository;
-    private Repository\DowntimeDefinitionRepository $downtimeDefinitionRepository;
+    private Repository\RecipeRepository $recipeRepository;
+    private Repository\InventoryEntryRepository $inventoryEntryRepository;
     private Repository\ItemRepository $itemRepository;
 
     /**
@@ -31,18 +32,20 @@ class DowntimeConverter implements ParamConverterInterface
      *
      * @param Security $security
      * @param Repository\DowntimeRepository $downtimeRepository,
-     * @param Repository\DowntimeDefinitionRepository $downtimeDefinitionRepository
+     * @param Repository\RecipeRepository $recipeRepository
      * @param Repository\ItemRepository $itemRepository
      */
     public function __construct(
         Security $security,
         Repository\DowntimeRepository $downtimeRepository,
-        Repository\DowntimeDefinitionRepository $downtimeDefinitionRepository,
+        Repository\RecipeRepository $recipeRepository,
+        Repository\InventoryEntryRepository $inventoryEntryRepository,
         Repository\ItemRepository $itemRepository)
     {
-        $this->downtimeRepository = $downtimeRepository;
         $this->security = $security;
-        $this->downtimeDefinitionRepository = $downtimeDefinitionRepository;
+        $this->downtimeRepository = $downtimeRepository;
+        $this->recipeRepository = $recipeRepository;
+        $this->inventoryEntryRepository = $inventoryEntryRepository;
         $this->itemRepository = $itemRepository;
     }
 
@@ -62,19 +65,23 @@ class DowntimeConverter implements ParamConverterInterface
         $downtime->setName($decoded['name']);
         $downtime->setDescription($decoded['description']);
         $downtime->setCreatedAt(new \DateTime());
-        $downtime->setDownTimeDefinition(
-            $this->downtimeDefinitionRepository->findOneBy([
-                'name' => $decoded['downTimeDefinition']['name']
-            ])
-        );
-        /** @var PersistentCollection $inventoryEntries */
-        $inventoryEntries = $character->getInventories()->get(0)->getEntries();
+        $downtime->setRecipe($this->recipeRepository->find($decoded['recipe']));
+
         $entries = new ArrayCollection();
+
+        if (null !== $decoded['id']) {
+            foreach ($downtime->getRelatedItems() as $item) {
+                $item->setDowntime(null);
+            }
+        }
+
         foreach ($decoded['relatedItems'] as $relatedItems) {
-            /** @var InventoryEntry $entry */
-            $entry = $inventoryEntries->filter(function (InventoryEntry $i) use ($relatedItems) {
-                return $i->getItem()->getName() === $relatedItems['item']['name'];
-            })[0] ?? null;
+            $item = $this->itemRepository->find($relatedItems['item']['id']);
+            $entry = $this->inventoryEntryRepository->findOneBy([
+                'item' => $item,
+                'inventory' => $character->getInventories()->get(0)
+            ]);
+
             if (null !== $entry) {
                 $entry->setDowntime($downtime);
                 $entries->add($entry);

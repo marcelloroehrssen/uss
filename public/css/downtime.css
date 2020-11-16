@@ -37,11 +37,32 @@
     bottom:2px;
     left:50%;
 }
+.ea-edit .destroy {
+    display: none;
+    position:absolute;
+    top:2px;
+    right:2px;
+}
 .ea-edit .struct-point.remove {
     transform: translateX(-100%)
 }
 .ea-edit .struct-point.add {}
 
-.item.is-present:hover .struct-point {
+
+.item.is-present .struct-point-label {
+    display: none;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    color:white;
+    font-weight:bold;
+    font-size: 24px;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 0 5px #000
+}
+
+.item.is-present:hover .struct-point,
+.item.is-present:hover .destroy,
+.item.is-present:hover .struct-point-label {
     display: block;
 }

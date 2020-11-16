@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass=DowntimeDefinitionRepository::class)
@@ -17,6 +18,7 @@ class DowntimeDefinition
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("exposed")
      */
     private $id;
 
@@ -45,11 +47,6 @@ class DowntimeDefinition
     private $items;
 
     /**
-     * @ORM\OneToMany(targetEntity=Downtime::class, mappedBy="downTimeDefinition")
-     */
-    private $downtimes;
-
-    /**
      * @ORM\Column(type="integer")
      * @Groups("exposed")
      */
@@ -61,10 +58,19 @@ class DowntimeDefinition
      */
     private $recipes;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Attribute::class)
+     */
+    private $attribute;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Skill::class)
+     */
+    private $skill;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
-        $this->downtimes = new ArrayCollection();
         $this->recipes = new ArrayCollection();
     }
 
@@ -135,37 +141,6 @@ class DowntimeDefinition
         return $this;
     }
 
-    /**
-     * @return Collection|Downtime[]
-     */
-    public function getDowntimes(): Collection
-    {
-        return $this->downtimes;
-    }
-
-    public function addDowntime(Downtime $downtime): self
-    {
-        if (!$this->downtimes->contains($downtime)) {
-            $this->downtimes[] = $downtime;
-            $downtime->setDownTimeDefinition($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDowntime(Downtime $downtime): self
-    {
-        if ($this->downtimes->contains($downtime)) {
-            $this->downtimes->removeElement($downtime);
-            // set the owning side to null (unless already changed)
-            if ($downtime->getDownTimeDefinition() === $this) {
-                $downtime->setDownTimeDefinition(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function __toString()
     {
         return $this->name;
@@ -210,6 +185,30 @@ class DowntimeDefinition
                 $recipe->setDowntimeDefinition(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAttribute(): ?Attribute
+    {
+        return $this->attribute;
+    }
+
+    public function setAttribute(?Attribute $attribute): self
+    {
+        $this->attribute = $attribute;
+
+        return $this;
+    }
+
+    public function getSkill(): ?Skill
+    {
+        return $this->skill;
+    }
+
+    public function setSkill(?Skill $skill): self
+    {
+        $this->skill = $skill;
 
         return $this;
     }

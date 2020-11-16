@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Downtime;
+use App\Entity\DowntimeDefinition;
 use App\Repository\DowntimeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -10,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 /**
  * @Route("/downtime", name="downtime")
@@ -35,6 +38,8 @@ class DowntimeController extends AbstractController
         }
         return $this->json($data, 200, [], [
             'groups' => 'exposed',
+            'include_definition' => true,
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => fn (DowntimeDefinition $downtime) => $downtime->getId(),
         ]);
     }
 

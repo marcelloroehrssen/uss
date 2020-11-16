@@ -6,6 +6,7 @@ use App\Entity\Downtime;
 use App\Entity\Inventory;
 use App\Entity\InventoryEntry;
 use App\Entity\Item;
+use App\Entity\Recipe;
 use App\Repository\InventoryEntryRepository;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -61,7 +62,7 @@ class DowntimeCrudController extends AbstractCrudController
             ->add('createdAt')
             ->add('characterSheet')
             ->add('relatedItems')
-            ->add('downTimeDefinition')
+            ->add('recipe')
             ->add('resolutionTime')
             ->add('storyTeller')
             ->add('resolution')
@@ -102,7 +103,8 @@ class DowntimeCrudController extends AbstractCrudController
             AssociationField::new('relatedItems', 'Item associati')
                 ->setFormTypeOption('query_builder', $qb)
                 ->onlyWhenUpdating(),
-            AssociationField::new('downTimeDefinition', 'Definizione associata'),
+            AssociationField::new('recipe', 'Ricetta associata')
+                ->formatValue(fn (string $s, Downtime $d) => $d->getRecipe()->getDowntimeDefinition()->getName() . ' [' . $d->getRecipe()->getName() . ']'),
             TextEditorField::new('resolution', 'Risoluzione')->setNumOfRows(7),
             DateTimeField::new('resolutionTime', 'Data di risoluzione'),
             AssociationField::new('storyTeller', 'Narratore')

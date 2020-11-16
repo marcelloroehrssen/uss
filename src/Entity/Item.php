@@ -100,13 +100,13 @@ class Item
      * @ORM\Column(type="integer")
      * @Groups("exposed")
      */
-    private $cost;
+    private $cost = 0;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups("exposed")
      */
-    private $costSell;
+    private $costSell = 0;
 
     /**
      * @ORM\Column(type="boolean")
@@ -122,13 +122,13 @@ class Item
      * @ORM\Column(type="integer")
      * @Groups("exposed")
      */
-    private $dots;
+    private $dots = 1;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups("exposed")
      */
-    private $value;
+    private $value = 1;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -140,19 +140,19 @@ class Item
      * @ORM\Column(type="integer")
      * @Groups("exposed")
      */
-    private $max;
+    private $max = 0;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups("exposed")
      */
-    private $bonus;
+    private $bonus = 0;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups("exposed")
      */
-    private $structPoint;
+    private $structPoint = 0;
 
     /**
      * @ORM\Column(type="boolean")

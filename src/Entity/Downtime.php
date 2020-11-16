@@ -47,10 +47,10 @@ class Downtime
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=DowntimeDefinition::class, inversedBy="downtimes")
+     * @ORM\ManyToOne(targetEntity=Recipe::class, inversedBy="downtimes")
      * @Groups("exposed")
      */
-    private $downTimeDefinition;
+    private $recipe;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -166,14 +166,14 @@ class Downtime
         return $this;
     }
 
-    public function getDownTimeDefinition(): ?DowntimeDefinition
+    public function getRecipe(): ?Recipe
     {
-        return $this->downTimeDefinition;
+        return $this->recipe;
     }
 
-    public function setDownTimeDefinition(?DowntimeDefinition $downTimeDefinition): self
+    public function setRecipe(?Recipe $recipe): self
     {
-        $this->downTimeDefinition = $downTimeDefinition;
+        $this->recipe = $recipe;
 
         return $this;
     }

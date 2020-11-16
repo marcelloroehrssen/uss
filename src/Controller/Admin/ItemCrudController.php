@@ -84,6 +84,12 @@ class ItemCrudController extends AbstractCrudController
             IntegerField::new('value', 'Punti oggetto'),
             IntegerField::new('max', 'Massimo')
                 ->setHelp('Numero di volte in cui questo oggetto è acquistabile in creazione'),
+            IntegerField::new('cost', 'Costo di acquisto')
+                ->setHelp('Numero di volte in cui questo oggetto è acquistabile in creazione')
+				->onlyOnForms(),
+            IntegerField::new('costSell', 'Costo di vendita')
+                ->setHelp('Numero di volte in cui questo oggetto è acquistabile in creazione')
+				->onlyOnForms(),
             BooleanField::new('isConsumable', 'Consumabile'),
             BooleanField::new('onlyInCreation', 'Solo in creazione')->setHelp('Questo item è disponibile in creazione'),
             BooleanField::new('enabled', 'Abilitato'),

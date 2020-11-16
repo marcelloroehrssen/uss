@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass=RecipeRepository::class)
@@ -44,9 +45,16 @@ class Recipe
      */
     private $description;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Downtime::class, mappedBy="recipe")
+     * @Groups("exposed")
+     */
+    private $downtimes;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
+        $this->downtimes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -114,5 +122,52 @@ class Recipe
         $this->description = $description;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Downtime[]
+     */
+    public function getDowntimes(): Collection
+    {
+        return $this->downtimes;
+    }
+
+    /**
+     * @param Collection|Downtime[] $downtimes
+     * @return Recipe
+     */
+    public function setDowntimes($downtimes): self
+    {
+        $this->downtimes = $downtimes;
+
+        return $this;
+    }
+
+    public function addDowntime(Downtime $downtime): self
+    {
+        if (!$this->downtimes->contains($downtime)) {
+            $this->downtimes[] = $downtime;
+            $downtime->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDowntime(Downtime $downtime): self
+    {
+        if ($this->downtimes->contains($downtime)) {
+            $this->downtimes->removeElement($downtime);
+            // set the owning side to null (unless already changed)
+            if ($downtime->getRecipe() === $this) {
+                $downtime->setRecipe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 }

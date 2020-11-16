@@ -33,6 +33,19 @@ class InventoryEntryController extends AbstractController
         $this->inventoryEntryRepository = $inventoryEntryRepository;
         $this->entityManager = $entityManager;
     }
+    /**
+     * @Route(methods={"delete"}, name="item_remove")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function delete(Request $request)
+    {
+        $id = $request->request->get('id');
+
+        return $this->json(['id' => $id]);
+    }
 
     /**
      * @Route("/struct", methods={"post"}, name="item_update_struct_point")

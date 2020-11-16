@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\Character;
 use App\Entity\InventoryEntry;
 use App\Entity\Item;
 use Doctrine\ORM\PersistentCollection;
@@ -43,13 +44,16 @@ class AppExtension extends AbstractExtension
             new TwigFilter('containsItem', [$this, 'containsItem']),
             new TwigFilter('get_entry', [$this, 'getEntry']),
             new TwigFilter('time_diff', [$this, 'diff'], ['needs_environment' => true]),
+            new TwigFilter('find_attr', [$this, 'findAttr']),
+            new TwigFilter('find_skill', [$this, 'findSkill']),
         ];
     }
 
     public function getFunctions()
     {
         return [
-            new TwigFunction('getDowntimeItemBadge', [$this, 'getDowntimeItemBadge'])
+            new TwigFunction('getDowntimeItemBadge', [$this, 'getDowntimeItemBadge']),
+            new TwigFunction('uniqId', [$this, 'uniqId'])
         ];
     }
 
@@ -99,6 +103,35 @@ class AppExtension extends AbstractExtension
         }
 
         return '';
+    }
+
+    public function uniqId(string $prefix = null)
+    {
+        return uniqid($prefix);
+    }
+
+    public function findAttr(Character $character, $attrId)
+    {
+        $attrValue = 0;
+        foreach ($character->getCharacterAttributes() as $attr) {
+            if ($attr->getAttribute()->getId() === $attrId) {
+                $attrValue = $attr->getValue();
+                break;
+            }
+        }
+        return $attrValue;
+    }
+
+    public function findSkill(Character $character, $skillId)
+    {
+        $skillValue = 0;
+        foreach ($character->getCharacterSkills() as $skill) {
+            if ($skill->getSkill()->getId() === $skillId) {
+                $skillValue = $skill->getValue();
+                break;
+            }
+        }
+        return $skillValue;
     }
 
     private function getPluralizedInterval($count, $invert, $unit)

@@ -26,56 +26,81 @@
     </ul>
 {% endblock %}
 
+{% block itemsList %}
+    {% for item in itemList %}
+        {% set isInInventory = (entity.instance.characterSheet.inventories[0].entries|containsItem(item)) ? true : false %}
+        {% set isAssigned = (entity.instance.relatedItems|containsItem(item)) ? true : false %}
+        {% set badge = getDowntimeItemBadge(isInInventory, isAssigned) %}
+        {% set relatedItem = entity.instance.relatedItems|get_entry(item) %}
+        {% set uniq = uniqId('relItem-') %}
+        <span id="{{ uniq }}" class="item is-present">
+            <img data-placement="top"
+                 data-toggle="tooltip"
+                 data-html="true"
+                 title=" {{ block('itemTooltip') | escape }}"
+                 width="130"
+                 src="/uploads/{{ item.image }}"
+                 alt="{{ item.name }}"
+                 class="img-thumbnail"/>
+            <span data-placement="left"
+                  data-toggle="tooltip"
+                  title="{{ badge[1] }}"
+                  class="cross {{ badge[0] }}"></span>
+            <span class="struct-point-label">
+                <span id="struct-point-{{ relatedItem.id ?? 0 }}">{{ relatedItem.structPoint ?? 0 }}</span>/<span>{{ item.structPoint }}</span>
+            </span>
+            {% if isAssigned %}
+                <button data-toggle="tooltip"
+                        onclick="destroy({{ (relatedItem.id ?? -1) }}, '{{ uniq }}')"
+                        data-placement="top"
+                        title="Distruggi oggetto"
+                        class="btn btn-secondary destroy item">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                <button data-toggle="tooltip"
+                        onclick="updateStructPoint({{ (relatedItem.id ?? -1) }}, 'decrement')"
+                        data-placement="bottom"
+                        title="Rimuovi punto struttura"
+                        class="btn btn-secondary struct-point remove">
+                    <span class="fa fa-minus"></span>
+                </button>
+                <button data-toggle="tooltip"
+                        onclick="updateStructPoint({{ (relatedItem.id ?? -1) }}, 'increment')"
+                        data-placement="bottom"
+                        title="Aggiungi punto struttura"
+                        class="btn btn-secondary struct-point add">
+                    <span class="fa fa-plus"></span>
+                </button>
+            {% endif %}
+        </span>
+    {% endfor %}
+{% endblock %}
+
 {% block downtimeDefinition %}
     <div class="content-panel downtime-definition">
         <div class="content-panel-header">
-            Definizione associata: <strong>{{ entity.instance.downtimeDefinition.name }}</strong>
+            Definizione associata: <strong>{{ entity.instance.recipe.downtimeDefinition.name }}</strong> [<strong>{{ entity.instance.recipe.name }}</strong>]
         </div>
         <div class="content-panel-body with-background without-footer">
             <strong>Testo</strong>
             <hr/>
             <p>
-                {{ entity.instance.downtimeDefinition.description | raw }}
+                {{ entity.instance.recipe.downtimeDefinition.description | raw }}
             </p>
             <strong>Oggetti necessari</strong>
             <hr/>
             <p class="items">
-                {% for item in entity.instance.downtimeDefinition.items %}
-                    {% set isInInventory = (entity.instance.characterSheet.inventories[0].entries|containsItem(item)) ? true : false %}
-                    {% set isAssigned = (entity.instance.relatedItems|containsItem(item)) ? true : false %}
-                    {% set badge = getDowntimeItemBadge(isInInventory, isAssigned) %}
-                    {% set relatedItem = entity.instance.relatedItems|get_entry(item) %}
-                    <span class="item is-present">
-                        <img data-placement="top"
-                             data-toggle="tooltip"
-                             data-html="true"
-                             title=" {{ block('itemTooltip') | escape }}"
-                             width="100"
-                             src="/uploads/{{ item.image }}"
-                             alt="{{ item.name }}"
-                             class="img-thumbnail"/>
-                        <span data-placement="left"
-                              data-toggle="tooltip"
-                              title="{{ badge[1] }}"
-                              class="cross {{ badge[0] }}"></span>
-                        {% if isAssigned %}
-                        <button data-toggle="tooltip"
-                                onclick="updateStructPoint({{ (relatedItem.id ?? -1) }}, 'decrement')"
-                                data-placement="top"
-                                title="Rimuovi punto struttura - attuali {{ (relatedItem.structPoint ?? 0) }}/{{ item.structPoint }}"
-                                class="btn btn-secondary struct-point remove">
-                            <span class="fa fa-minus"></span>
-                        </button>
-                        <button data-toggle="tooltip"
-                                onclick="updateStructPoint({{ (relatedItem.id ?? -1) }}, 'increment')"
-                                data-placement="top"
-                                title="Aggiungi punto struttura - attuali {{ (relatedItem.structPoint ?? 0) }}/{{ item.structPoint }}"
-                                class="btn btn-secondary struct-point add">
-                            <span class="fa fa-plus"></span>
-                        </button>
-                        {% endif %}
-                    </span>
-                {% endfor %}
+                {% set itemList = entity.instance.recipe.downtimeDefinition.items %}
+                {{ block('itemsList') }}
+            </p>
+            <strong>Ricetta selezionata</strong>
+            <hr/>
+            <p>
+                {{ entity.instance.recipe.description | raw }}
+            </p>
+            <p class="items">
+                {% set itemList = entity.instance.recipe.items %}
+                {{ block('itemsList') }}
             </p>
         </div>
     </div>
@@ -99,16 +124,36 @@
                     <fieldset>
                         <legend>Tiradadi</legend>
                         <div>
+                            {% set definition = entity.instance.recipe.downtimeDefinition %}
+                            {% set character = entity.instance.characterSheet %}
+                            <div><strong>Pool</strong></div>
+                            <div style="display:grid;grid-template-columns: auto 50px">
+                                <div>attributo: <strong>{{ definition.attribute.name }}</strong></div>
+                                <div style="text-align: right">{{ character | find_attr(definition.attribute.id) }}</div>
+                                {% if definition.skill %}
+                                    <div>abilità: <strong>{{ definition.skill.name }}</strong></div>
+                                    <div style="text-align: right">{{ character | find_skill(definition.skill.id) }}</div>
+                                {% endif %}
+                                <div>totale</div>
+                                <div style="text-align: right">{{ (character | find_attr(definition.attribute.id)) + (definition.skill ? (character | find_skill(definition.skill.id))  : 0) }}</div>
+                                <div>difficolta</div>
+                                <div style="text-align: right">{{ definition.challenge }}</div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div>
                             <p>
-                                <a href="#" data-toggle="modal" data-target="#character-sheet">Vedi la scheda di {{ entity.instance.characterSheet.name }}</a>
+                                <a href="#" data-toggle="modal" data-target="#character-sheet">Vedi la scheda
+                                    di {{ entity.instance.characterSheet.name }}</a>
                             </p>
                         </div>
                         <div class="input-group">
-                            <input id="dice" type="number" class="form-control" placeholder="numero di d10" />
+                            <input id="dice" type="number" class="form-control" placeholder="numero di d10"/>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-primary"
                                         type="button"
-                                        onClick="throwDice($('#dice'))">Tira</button>
+                                        onClick="throwDice($('#dice'))">Tira
+                                </button>
                             </div>
                         </div>
                     </fieldset>
@@ -150,7 +195,7 @@
                         {{ form_row(edit_form.createdAt) }}
                         {{ form_row(edit_form.characterSheet) }}
                         {{ form_row(edit_form.relatedItems) }}
-                        {{ form_row(edit_form.downTimeDefinition) }}
+                        {{ form_row(edit_form.recipe) }}
                     </fieldset>
                     <fieldset>
                         <legend>Risoluzione</legend>
@@ -175,33 +220,41 @@
                 </div>
                 <div class="modal-body">
                     <p class="title">
-                        <u>Modalità</u><br />
-                        di gioco: <strong>{{ character.mode == 1 ? 'Softcore' : 'Hardcore' }}</strong> - Difetti:<strong>{{ character.defectMode == 1 ? 'Casuale' : 'Non Casuale' }}</strong>
+                        <u>Modalità</u><br/>
+                        di gioco: <strong>{{ character.mode == 1 ? 'Softcore' : 'Hardcore' }}</strong> -
+                        Difetti:<strong>{{ character.defectMode == 1 ? 'Casuale' : 'Non Casuale' }}</strong>
                     </p>
                     <p class="title">
-                        <u>Base</u><br />
-                        Fede: <strong>{{ character.faith.name }}</strong> - Fazione: <strong>{{ character.faction.name }}</strong> - Mestiere: <strong>{{ character.job.name }}</strong>
+                        <u>Base</u><br/>
+                        Fede: <strong>{{ character.faith.name }}</strong> - Fazione:
+                        <strong>{{ character.faction.name }}</strong> - Mestiere:
+                        <strong>{{ character.job.name }}</strong>
                     </p>
                     <p class="title">
-                        <u>Attributi</u><br />
-                        {{ character.characterAttributes[0].attribute.name }}: <strong>{{ character.characterAttributes[0].value }}</strong> - {{ character.characterAttributes[1].attribute.name }}: <strong>{{ character.characterAttributes[1].value }}</strong> - {{ character.characterAttributes[2].attribute.name }}: <strong>{{ character.characterAttributes[2].value }}</strong>
+                        <u>Attributi</u><br/>
+                        {{ character.characterAttributes[0].attribute.name }}:
+                        <strong>{{ character.characterAttributes[0].value }}</strong>
+                        - {{ character.characterAttributes[1].attribute.name }}:
+                        <strong>{{ character.characterAttributes[1].value }}</strong>
+                        - {{ character.characterAttributes[2].attribute.name }}:
+                        <strong>{{ character.characterAttributes[2].value }}</strong>
                     </p>
                     <p>
-                        <u>Difetti</u><br />
+                        <u>Difetti</u><br/>
                         {% for defect in character.defects %}
                             <strong>{{ defect.name }}</strong>{{ loop.last ? '' : ', ' }}
                         {% endfor %}
                     </p>
                     <p>
-                        <u>Abilità</u><br />
+                        <u>Abilità</u><br/>
                         {% for skill in character.characterSkills %}
-                            {{ skill.skill.name }}: <strong>{{ skill.value }}</strong><br />
+                            {{ skill.skill.name }}: <strong>{{ skill.value }}</strong><br/>
                         {% endfor %}
                     </p>
                     <p>
-                        <u>Background</u><br />
+                        <u>Background</u><br/>
                         {% for background in character.characterBackgrounds %}
-                            {{ background.background.name }}: <strong>{{ background.value }}</strong><br />
+                            {{ background.background.name }}: <strong>{{ background.value }}</strong><br/>
                         {% endfor %}
                     </p>
                 </div>
@@ -231,8 +284,7 @@
     {{ parent() }}
     <script type="text/javascript">
 
-        function updateStructPoint(itemId, action)
-        {
+        function updateStructPoint(itemId, action) {
             $.ajax({
                 type: "post",
                 url: '/inventory_entry/struct',
@@ -242,6 +294,25 @@
                     action: action
                 },
                 success: function (data) {
+                    $('#struct-point-' + itemId).html(data.points)
+                }
+            })
+        }
+
+        function destroy(itemId, container) {
+            $.ajax({
+                type: "delete",
+                url: '/inventory_entry',
+                dataType: "JSON",
+                data: {
+                    id: itemId
+                },
+                success: function (data) {
+                    $('#'+container).animate({'opacity': 0}, 150, function () {
+                        $('#'+container).animate({'width': 0}, 150, function () {
+                            $('#'+container).remove()
+                        })
+                    })
                 }
             })
         }
@@ -249,17 +320,17 @@
         function throwDice(diceNumber) {
             let diceResult = '';
             let success = 0;
-            for (var i = 0; i < 1*diceNumber.val(); i++) {
+            for (var i = 0; i < 1 * diceNumber.val(); i++) {
                 const rand = Math.floor(Math.random() * (10 - 1) + 1)
                 if (rand > 7) {
-                    diceResult += '<strong>' +rand + '</strong> ';
+                    diceResult += '<strong>' + rand + '</strong> ';
                     success++;
                 } else {
                     diceResult += rand + ' ';
                 }
             }
 
-            addComment('{{ entity.instance.id }}', 'ha tirato i dadi ottenendo <strong>'+ (success + ((success === 0 || success > 1) ? ' successi' : ' successo') ) + '</strong> con questi risultati: ' + diceResult, $('#comments-container'))
+            addComment('{{ entity.instance.id }}', 'ha tirato i dadi ottenendo <strong>' + (success + ((success === 0 || success > 1) ? ' successi' : ' successo')) + '</strong> con questi risultati: ' + diceResult, $('#comments-container'))
         }
 
         function addComment(dtid, commentBox, commentContainer) {
@@ -289,17 +360,17 @@
         }
 
         {% if entity.fqcn == 'App\\Entity\\Inventory' %}
-            const maxEntry = $('#Inventory_maxItems').val()
-            $(function () {
-                $('.field-collection-add-button').on('click', function () {
-                    hideAddMore.apply(this);
-                })
-                $('#Inventory_entries').on('click', function (e) {
-                    if ($(e.target).hasClass('fa-times')) {
-                        hideAddMore.apply($('.field-collection-add-button'));
-                    }
-                })
+        const maxEntry = $('#Inventory_maxItems').val()
+        $(function () {
+            $('.field-collection-add-button').on('click', function () {
+                hideAddMore.apply(this);
             })
+            $('#Inventory_entries').on('click', function (e) {
+                if ($(e.target).hasClass('fa-times')) {
+                    hideAddMore.apply($('.field-collection-add-button'));
+                }
+            })
+        })
         {% endif %}
     </script>
 {% endblock %}

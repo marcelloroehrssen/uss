@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Downtime;
 use App\Entity\Item;
+use App\Entity\Recipe;
 use App\Normalizer\AbstractMinimalNormalizer;
 use App\Repository;
 use App\Repository\DowntimeDefinitionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 /**
  * @Route("/lookup", name="lookup")

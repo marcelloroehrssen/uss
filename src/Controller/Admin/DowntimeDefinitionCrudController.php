@@ -49,6 +49,8 @@ class DowntimeDefinitionCrudController extends AbstractCrudController
             IntegerField::new('challenge', 'Difficoltà'),
             AssociationField::new('items', 'Oggetti necessari'),
             AssociationField::new('recipes', 'Ricette associate'),
+            AssociationField::new('attribute', 'Attributo associata'),
+            AssociationField::new('skill', 'Abilità associata'),
 
         ];
     }
